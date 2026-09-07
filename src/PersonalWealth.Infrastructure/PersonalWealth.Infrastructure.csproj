@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>PersonalWealth.Infrastructure</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PersonalWealth.Application\PersonalWealth.Application.csproj" />
+    <ProjectReference Include="..\PersonalWealth.Domain\PersonalWealth.Domain.csproj" />
+  </ItemGroup>
+</Project>
