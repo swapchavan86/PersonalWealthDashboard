@@ -12,7 +12,7 @@ Define immutable framework-independent domain event contracts.
 No infrastructure or business feature implementation. Comments minimal and English-only.
 
 ## Validation
-`dotnet build` and `dotnet test`.
+`dotnet restore`, `dotnet build`, and `dotnet test` — pending execution in a local checkout.
 
 ## Status
-Ready
+Implemented on `feature/pw-core-005-domain-event-contract`; PR opened for review.
