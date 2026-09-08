@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>PersonalWealth.ArchitectureTests</RootNamespace>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/PersonalWealth.Api/PersonalWealth.Api.csproj" />
+    <ProjectReference Include="../../src/PersonalWealth.Application/PersonalWealth.Application.csproj" />
+    <ProjectReference Include="../../src/PersonalWealth.Domain/PersonalWealth.Domain.csproj" />
+    <ProjectReference Include="../../src/PersonalWealth.Infrastructure/PersonalWealth.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

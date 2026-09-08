@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>PersonalWealth.UnitTests</RootNamespace>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/PersonalWealth.Domain/PersonalWealth.Domain.csproj" />
+    <ProjectReference Include="../../src/PersonalWealth.Application/PersonalWealth.Application.csproj" />
+  </ItemGroup>
+</Project>
