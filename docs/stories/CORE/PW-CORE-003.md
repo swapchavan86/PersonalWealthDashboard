@@ -13,7 +13,7 @@ Create framework-independent base entity/value contracts for identity and common
 Apply SOLID and avoid speculative abstractions. Comments must be minimal and English-only.
 
 ## Validation
-`dotnet build` and `dotnet test`.
+`dotnet restore`, `dotnet build`, and `dotnet test` — pending execution in a local checkout.
 
 ## Status
-Ready
+Implemented on `feature/pw-core-003-base-entity-contracts`; PR opened for review.
