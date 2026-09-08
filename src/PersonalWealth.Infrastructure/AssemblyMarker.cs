@@ -1,0 +1,1 @@
+namespace PersonalWealth; public sealed class InfrastructureAssemblyMarker;
