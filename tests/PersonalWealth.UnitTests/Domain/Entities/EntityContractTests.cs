@@ -43,7 +43,9 @@ public sealed class EntityContractTests
     {
         var id = Guid.NewGuid();
 
-        Assert.NotEqual(new TestEntity(id), new OtherTestEntity(id));
+        Assert.NotEqual<Entity<Guid>>(new TestEntity(id), new OtherTestEntity(id));
+        Assert.NotEqual((Entity<Guid>)new TestEntity(id), (Entity<Guid>)new OtherTestEntity(id));
+        Assert.False(new TestEntity(id).Equals(new OtherTestEntity(id)));
     }
 
     [Fact]
