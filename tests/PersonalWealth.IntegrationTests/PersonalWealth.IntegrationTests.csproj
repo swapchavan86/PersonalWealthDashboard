@@ -7,4 +7,7 @@
     <ProjectReference Include="../../src/PersonalWealth.Api/PersonalWealth.Api.csproj" />
     <ProjectReference Include="../../src/PersonalWealth.Infrastructure/PersonalWealth.Infrastructure.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
+  </ItemGroup>
 </Project>
