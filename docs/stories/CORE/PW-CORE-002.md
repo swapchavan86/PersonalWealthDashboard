@@ -15,7 +15,7 @@ Protect the solution with automated architecture tests.
 Follow Clean Architecture, SOLID, dependency inversion and interface segregation strongly. Keep comments minimal and English-only. Do not add secrets or hard-coded credentials.
 
 ## Validation
-`dotnet restore`, `dotnet build`, `dotnet test`.
+`dotnet restore`, `dotnet build`, `dotnet test` — pending execution in a local checkout.
 
 ## Status
-Ready
+Implemented on `feature/PW-CORE-002-architecture-rules`; PR opened for review.
