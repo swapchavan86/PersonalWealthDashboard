@@ -4,7 +4,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\PersonalWealth.Application\PersonalWealth.Application.csproj" />
-    <ProjectReference Include="..\PersonalWealth.Infrastructure\PersonalWealth.Infrastructure.csproj" />
     <ProjectReference Include="..\PersonalWealth.Contracts\PersonalWealth.Contracts.csproj" />
   </ItemGroup>
 </Project>
