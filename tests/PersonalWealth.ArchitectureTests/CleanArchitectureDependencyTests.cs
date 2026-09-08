@@ -5,6 +5,7 @@ namespace PersonalWealth.ArchitectureTests;
 
 public sealed class CleanArchitectureDependencyTests
 {
+    private static readonly Assembly Api = typeof(PersonalWealth.ApiAssemblyMarker).Assembly;
     private static readonly Assembly Domain = typeof(PersonalWealth.DomainAssemblyMarker).Assembly;
     private static readonly Assembly Application = typeof(PersonalWealth.ApplicationAssemblyMarker).Assembly;
     private static readonly Assembly Infrastructure = typeof(PersonalWealth.InfrastructureAssemblyMarker).Assembly;
@@ -12,15 +13,23 @@ public sealed class CleanArchitectureDependencyTests
     [Fact]
     public void Domain_does_not_reference_outer_layers_or_infrastructure()
     {
-        Assert.DoesNotContain(ReferencedAssemblyNames(Domain),
-            name => IsForbiddenForDomain(name));
+        Assert.DoesNotContain(ReferencedAssemblyNames(Domain), name => IsForbiddenForDomain(name));
     }
 
     [Fact]
     public void Application_does_not_reference_outer_layers()
     {
-        Assert.DoesNotContain(ReferencedAssemblyNames(Application),
-            name => IsForbiddenForApplication(name));
+        Assert.DoesNotContain(ReferencedAssemblyNames(Application), name => IsForbiddenForApplication(name));
+    }
+
+    [Fact]
+    public void Api_references_application_and_contracts_but_not_infrastructure()
+    {
+        var references = ReferencedAssemblyNames(Api);
+
+        Assert.Contains("PersonalWealth.Application", references);
+        Assert.Contains("PersonalWealth.Contracts", references);
+        Assert.DoesNotContain("PersonalWealth.Infrastructure", references);
     }
 
     [Fact]
@@ -40,6 +49,8 @@ public sealed class CleanArchitectureDependencyTests
     [InlineData("Microsoft.Data.SqlClient")]
     [InlineData("System.IO.FileSystem")]
     [InlineData("OpenAI")]
+    [InlineData("Microsoft.Extensions.AI")]
+    [InlineData("Microsoft.Extensions.Hosting")]
     public void Domain_forbidden_dependency_catalog_is_enforced(string dependency)
     {
         Assert.True(IsForbiddenForDomain(dependency));
@@ -48,6 +59,11 @@ public sealed class CleanArchitectureDependencyTests
     [Theory]
     [InlineData("PersonalWealth.Api")]
     [InlineData("PersonalWealth.Infrastructure")]
+    [InlineData("Microsoft.EntityFrameworkCore")]
+    [InlineData("Microsoft.Data.SqlClient")]
+    [InlineData("System.IO.FileSystem")]
+    [InlineData("OpenAI")]
+    [InlineData("Microsoft.Extensions.AI")]
     public void Application_forbidden_dependency_catalog_is_enforced(string dependency)
     {
         Assert.True(IsForbiddenForApplication(dependency));
