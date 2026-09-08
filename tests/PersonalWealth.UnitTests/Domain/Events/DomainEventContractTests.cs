@@ -38,7 +38,9 @@ public sealed class DomainEventContractTests
             new DateTimeOffset(2026, 9, 8, 6, 0, 0, TimeSpan.Zero));
 
         Assert.IsType<TestEvent>(domainEvent);
+#pragma warning disable xUnit2000 // Constants and literals should be the expected argument
         Assert.Equal(typeof(TestEvent).Namespace, "PersonalWealth.UnitTests.Domain.Events");
+#pragma warning restore xUnit2000 // Constants and literals should be the expected argument
     }
 
     private sealed record TestEvent(Guid EventId, DateTimeOffset OccurredAtUtc) : IDomainEvent;
