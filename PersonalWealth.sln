@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalWealth.IntegrationT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalWealth.ArchitectureTests", "tests\PersonalWealth.ArchitectureTests\PersonalWealth.ArchitectureTests.csproj", "{AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,5 +73,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{88888888-8888-8888-8888-888888888888} = {BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB}
+		{99999999-9999-9999-9999-999999999999} = {BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB}
+		{AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA} = {BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB}
 	EndGlobalSection
 EndGlobal
