@@ -13,7 +13,7 @@ Make architecture rules comprehensive and resistant to accidental drift.
 Do not weaken rules for implementation convenience. Comments minimal and English-only.
 
 ## Validation
-`dotnet build` and `dotnet test`.
+`dotnet restore`, `dotnet build`, and `dotnet test` — pending execution in a local checkout.
 
 ## Status
-Ready
+Implemented on `feature/pw-core-007-architecture-hardening`; PR opened for review.
