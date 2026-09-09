@@ -9,13 +9,7 @@ public sealed class PersonalWealthDbContextFactory
 {
     public PersonalWealthDbContext CreateDbContext(string[] args)
     {
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", optional: true)
-            .AddJsonFile("appsettings.Local.json", optional: true)
-            .AddEnvironmentVariables()
-            .Build();
-
+        var configuration = BuildConfiguration();
         var connectionString = configuration.GetConnectionString(PersistenceOptions.ConnectionStringName);
 
         if (string.IsNullOrWhiteSpace(connectionString))
@@ -29,5 +23,31 @@ public sealed class PersonalWealthDbContextFactory
             .Options;
 
         return new PersonalWealthDbContext(options);
+    }
+
+    private static IConfiguration BuildConfiguration()
+    {
+        var currentDirectory = Directory.GetCurrentDirectory();
+        var candidateDirectories = new[]
+        {
+            currentDirectory,
+            Path.Combine(currentDirectory, "src", "PersonalWealth.Api"),
+            Path.Combine(currentDirectory, "..", "PersonalWealth.Api"),
+            Path.Combine(currentDirectory, "..", "..", "PersonalWealth.Api")
+        };
+
+        var apiDirectory = candidateDirectories
+            .Select(Path.GetFullPath)
+            .FirstOrDefault(directory =>
+                File.Exists(Path.Combine(directory, "appsettings.json")) ||
+                File.Exists(Path.Combine(directory, "appsettings.Local.json")))
+            ?? currentDirectory;
+
+        return new ConfigurationBuilder()
+            .SetBasePath(apiDirectory)
+            .AddJsonFile("appsettings.json", optional: true)
+            .AddJsonFile("appsettings.Local.json", optional: true)
+            .AddEnvironmentVariables()
+            .Build();
     }
 }
