@@ -59,7 +59,9 @@ public sealed class PersistenceFoundationTests
     {
         const string environmentVariable = "ConnectionStrings__Default";
         var originalValue = Environment.GetEnvironmentVariable(environmentVariable);
-        Environment.SetEnvironmentVariable(environmentVariable, "Server=(localdb)\\MSSQLLocalDB;Database=PersonalWealthDesignTimeTest;Trusted_Connection=True;");
+        Environment.SetEnvironmentVariable(
+            environmentVariable,
+            "Server=(localdb)\\MSSQLLocalDB;Database=master;Trusted_Connection=True;");
 
         try
         {
@@ -78,7 +80,7 @@ public sealed class PersistenceFoundationTests
     private static PersonalWealthDbContext CreateContext()
     {
         var options = new DbContextOptionsBuilder<PersonalWealthDbContext>()
-            .UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=PersonalWealthTest;Trusted_Connection=True;")
+            .UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=master;Trusted_Connection=True;")
             .Options;
 
         return new PersonalWealthDbContext(options);
@@ -88,7 +90,7 @@ public sealed class PersistenceFoundationTests
     {
         var configuration = new ConfigurationManager();
         configuration["ConnectionStrings:Default"] =
-            "Server=(localdb)\\MSSQLLocalDB;Database=PersonalWealthTest;Trusted_Connection=True;";
+            "Server=(localdb)\\MSSQLLocalDB;Database=master;Trusted_Connection=True;";
         return configuration;
     }
 }
