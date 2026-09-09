@@ -5,68 +5,82 @@ namespace PersonalWealth.ArchitectureTests;
 
 public sealed class CleanArchitectureDependencyTests
 {
-    private static readonly Assembly Api = typeof(PersonalWealth.ApiAssemblyMarker).Assembly;
-    private static readonly Assembly Domain = typeof(PersonalWealth.DomainAssemblyMarker).Assembly;
-    private static readonly Assembly Application = typeof(PersonalWealth.ApplicationAssemblyMarker).Assembly;
-    private static readonly Assembly Infrastructure = typeof(PersonalWealth.InfrastructureAssemblyMarker).Assembly;
+    private static readonly Assembly Api = Assembly.Load("PersonalWealth.Api");
+    private static readonly Assembly Application = Assembly.Load("PersonalWealth.Application");
+    private static readonly Assembly Domain = Assembly.Load("PersonalWealth.Domain");
+    private static readonly Assembly Infrastructure = Assembly.Load("PersonalWealth.Infrastructure");
+    private static readonly Assembly Worker = Assembly.Load("PersonalWealth.Worker");
 
     [Fact]
-    public void Domain_does_not_reference_outer_layers_or_infrastructure()
+    public void Domain_has_no_project_dependencies()
     {
-        Assert.DoesNotContain(ReferencedAssemblyNames(Domain), name => IsForbiddenForDomain(name));
+        AssertProjectDependencies(Domain);
     }
 
     [Fact]
-    public void Application_does_not_reference_outer_layers()
+    public void Application_depends_only_on_domain()
     {
-        Assert.DoesNotContain(ReferencedAssemblyNames(Application), name => IsForbiddenForApplication(name));
+        AssertProjectDependencies(Application, "PersonalWealth.Domain");
     }
 
     [Fact]
-    public void Api_references_application_and_contracts_but_not_infrastructure()
+    public void Api_depends_only_on_application_and_contracts()
     {
-        var references = ReferencedAssemblyNames(Api);
-
-        Assert.Contains("PersonalWealth.Application", references);
-        Assert.Contains("PersonalWealth.Contracts", references);
-        Assert.DoesNotContain("PersonalWealth.Infrastructure", references);
+        AssertProjectDependencies(Api, "PersonalWealth.Application", "PersonalWealth.Contracts");
     }
 
     [Fact]
-    public void Infrastructure_references_only_inward_project_layers()
+    public void Infrastructure_depends_only_inward_on_application_and_domain()
     {
-        var references = ReferencedAssemblyNames(Infrastructure);
+        AssertProjectDependencies(Infrastructure, "PersonalWealth.Application", "PersonalWealth.Domain");
+    }
 
-        Assert.Contains("PersonalWealth.Application", references);
-        Assert.Contains("PersonalWealth.Domain", references);
-        Assert.DoesNotContain("PersonalWealth.Api", references);
+    [Fact]
+    public void Worker_depends_on_application_and_infrastructure()
+    {
+        AssertProjectDependencies(Worker, "PersonalWealth.Application", "PersonalWealth.Infrastructure");
+    }
+
+    [Fact]
+    public void Domain_has_no_forbidden_framework_or_infrastructure_dependencies()
+    {
+        Assert.DoesNotContain(ReferencedAssemblyNames(Domain), IsForbiddenDependency);
+    }
+
+    [Fact]
+    public void Application_has_no_forbidden_framework_or_infrastructure_dependencies()
+    {
+        Assert.DoesNotContain(ReferencedAssemblyNames(Application), IsForbiddenDependency);
     }
 
     [Theory]
     [InlineData("PersonalWealth.Api")]
+    [InlineData("PersonalWealth.Application")]
     [InlineData("PersonalWealth.Infrastructure")]
     [InlineData("Microsoft.EntityFrameworkCore")]
+    [InlineData("Microsoft.AspNetCore.Http")]
     [InlineData("Microsoft.Data.SqlClient")]
     [InlineData("System.IO.FileSystem")]
     [InlineData("OpenAI")]
     [InlineData("Microsoft.Extensions.AI")]
-    [InlineData("Microsoft.Extensions.Hosting")]
-    public void Domain_forbidden_dependency_catalog_is_enforced(string dependency)
+    [InlineData("MassTransit")]
+    public void Forbidden_dependency_names_are_rejected(string dependency)
     {
-        Assert.True(IsForbiddenForDomain(dependency));
+        Assert.True(IsForbiddenDependency(dependency));
     }
 
-    [Theory]
-    [InlineData("PersonalWealth.Api")]
-    [InlineData("PersonalWealth.Infrastructure")]
-    [InlineData("Microsoft.EntityFrameworkCore")]
-    [InlineData("Microsoft.Data.SqlClient")]
-    [InlineData("System.IO.FileSystem")]
-    [InlineData("OpenAI")]
-    [InlineData("Microsoft.Extensions.AI")]
-    public void Application_forbidden_dependency_catalog_is_enforced(string dependency)
+    private static void AssertProjectDependencies(
+        Assembly assembly,
+        params string[] allowedProjectDependencies)
     {
-        Assert.True(IsForbiddenForApplication(dependency));
+        var allowed = allowedProjectDependencies.ToHashSet(StringComparer.Ordinal);
+        var projectDependencies = ReferencedAssemblyNames(assembly)
+            .Where(name => name.StartsWith("PersonalWealth.", StringComparison.Ordinal))
+            .ToHashSet(StringComparer.Ordinal);
+
+        Assert.True(
+            projectDependencies.SetEquals(allowed),
+            $"{assembly.GetName().Name} project dependencies were [{string.Join(", ", projectDependencies.Order())}], expected [{string.Join(", ", allowed.Order())}].");
     }
 
     private static IReadOnlySet<string> ReferencedAssemblyNames(Assembly assembly) =>
@@ -74,22 +88,15 @@ public sealed class CleanArchitectureDependencyTests
             .Select(reference => reference.Name!)
             .ToHashSet(StringComparer.Ordinal);
 
-    private static bool IsForbiddenForDomain(string name) =>
+    private static bool IsForbiddenDependency(string name) =>
         name is "PersonalWealth.Api"
+            or "PersonalWealth.Application"
             or "PersonalWealth.Infrastructure"
             or "Microsoft.EntityFrameworkCore"
             or "Microsoft.Data.SqlClient"
-            or "System.IO.FileSystem"
             or "OpenAI"
-            or "Microsoft.Extensions.AI"
-            or "Microsoft.Extensions.Hosting";
-
-    private static bool IsForbiddenForApplication(string name) =>
-        name is "PersonalWealth.Api"
-            or "PersonalWealth.Infrastructure"
-            or "Microsoft.EntityFrameworkCore"
-            or "Microsoft.Data.SqlClient"
-            or "System.IO.FileSystem"
-            or "OpenAI"
-            or "Microsoft.Extensions.AI";
+            or "MassTransit"
+            || name.StartsWith("Microsoft.AspNetCore.", StringComparison.Ordinal)
+            || name.StartsWith("Microsoft.Extensions.", StringComparison.Ordinal)
+            || name.StartsWith("System.IO.", StringComparison.Ordinal);
 }
