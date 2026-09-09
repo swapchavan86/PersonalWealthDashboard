@@ -24,9 +24,13 @@ public sealed class CleanArchitectureDependencyTests
     }
 
     [Fact]
-    public void Api_depends_only_on_application_and_contracts()
+    public void Api_depends_on_application_contracts_and_infrastructure()
     {
-        AssertProjectDependencies(Api, "PersonalWealth.Application", "PersonalWealth.Contracts");
+        AssertProjectDependencies(
+            Api,
+            "PersonalWealth.Application",
+            "PersonalWealth.Contracts",
+            "PersonalWealth.Infrastructure");
     }
 
     [Fact]
