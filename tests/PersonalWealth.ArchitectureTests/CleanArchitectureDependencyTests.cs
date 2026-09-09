@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Xml.Linq;
 using Xunit;
 
 namespace PersonalWealth.ArchitectureTests;
@@ -78,13 +79,54 @@ public sealed class CleanArchitectureDependencyTests
         params string[] allowedProjectDependencies)
     {
         var allowed = allowedProjectDependencies.ToHashSet(StringComparer.Ordinal);
-        var projectDependencies = ReferencedAssemblyNames(assembly)
-            .Where(name => name.StartsWith("PersonalWealth.", StringComparison.Ordinal))
+        var projectDependencies = ProjectReferenceNames(assembly)
             .ToHashSet(StringComparer.Ordinal);
 
         Assert.True(
             projectDependencies.SetEquals(allowed),
             $"{assembly.GetName().Name} project dependencies were [{string.Join(", ", projectDependencies.Order())}], expected [{string.Join(", ", allowed.Order())}].");
+    }
+
+    private static IReadOnlySet<string> ProjectReferenceNames(Assembly assembly)
+    {
+        var projectName = assembly.GetName().Name
+            ?? throw new InvalidOperationException("Assembly name is required to locate the project file.");
+        var projectFile = Path.Combine(FindRepositoryRoot(), "src", projectName, $"{projectName}.csproj");
+
+        if (!File.Exists(projectFile))
+        {
+            throw new FileNotFoundException($"Project file was not found for {projectName}.", projectFile);
+        }
+
+        var projectDirectory = Path.GetDirectoryName(projectFile)!;
+        var document = XDocument.Load(projectFile);
+
+        return document
+            .Descendants("ProjectReference")
+            .Select(reference => reference.Attribute("Include")?.Value)
+            .Where(include => !string.IsNullOrWhiteSpace(include))
+            .Select(include => Path.GetFullPath(Path.Combine(projectDirectory, include!)))
+            .Where(File.Exists)
+            .Select(path => Path.GetFileNameWithoutExtension(path))
+            .Where(name => name.StartsWith("PersonalWealth.", StringComparison.Ordinal))
+            .ToHashSet(StringComparer.Ordinal);
+    }
+
+    private static string FindRepositoryRoot()
+    {
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+
+        while (directory is not null)
+        {
+            if (File.Exists(Path.Combine(directory.FullName, "PersonalWealth.sln")))
+            {
+                return directory.FullName;
+            }
+
+            directory = directory.Parent;
+        }
+
+        throw new DirectoryNotFoundException("Repository root containing PersonalWealth.sln was not found.");
     }
 
     private static IReadOnlySet<string> ReferencedAssemblyNames(Assembly assembly) =>
