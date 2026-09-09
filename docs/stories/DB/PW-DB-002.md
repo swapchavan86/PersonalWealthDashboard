@@ -17,4 +17,4 @@ Schema follows domain/business requirements. Avoid UI-driven schema design.
 Build, unit tests and integration mapping tests.
 
 ## Status
-Ready
+Implemented on `feature/pw-db-002-ef-core-conventions`; local validation pending.
