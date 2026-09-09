@@ -14,7 +14,7 @@ Establish SQL Server configuration without embedding secrets.
 No business entities yet. Never commit secrets. Comments minimal and English-only.
 
 ## Validation
-Build, tests and a configuration test proving no secret is required from committed files.
+`dotnet restore`, `dotnet build`, and `dotnet test` — pending execution in a local checkout.
 
 ## Status
-Ready
+Implemented on `feature/pw-db-001-sqlserver-efcore-foundation`; PR opened for review.
