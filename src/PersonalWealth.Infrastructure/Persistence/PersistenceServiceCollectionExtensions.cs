@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace PersonalWealth.Infrastructure.Persistence;
 
@@ -18,8 +19,18 @@ public static class PersistenceServiceCollectionExtensions
                 $"Connection string '{PersistenceOptions.ConnectionStringName}' is required.");
         }
 
-        services.AddDbContext<PersonalWealthDbContext>(options =>
-            options.UseSqlServer(connectionString));
+        services.AddOptions<PersistenceOptions>()
+            .Configure(options => options.ConnectionString = connectionString)
+            .Validate(options => !string.IsNullOrWhiteSpace(options.ConnectionString));
+
+        services.AddDbContext<PersonalWealthDbContext>((serviceProvider, options) =>
+        {
+            var persistenceOptions = serviceProvider
+                .GetRequiredService<IOptions<PersistenceOptions>>()
+                .Value;
+
+            options.UseSqlServer(persistenceOptions.ConnectionString);
+        });
 
         return services;
     }
