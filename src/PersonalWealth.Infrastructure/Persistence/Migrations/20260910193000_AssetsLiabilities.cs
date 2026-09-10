@@ -23,7 +23,7 @@ public partial class AssetsLiabilities : Migration
                 CreatedAt = t.Column<DateTime>(type: "datetime2", nullable: false),
                 UpdatedAt = t.Column<DateTime>(type: "datetime2", nullable: true)
             },
-            c => c.PrimaryKey("PK_Assets", x => x.Id));
+            c => c.PrimaryKey("PK_Assets", new[] { "Id" }));
 
         m.CreateTable(
             "Liabilities",
@@ -43,7 +43,7 @@ public partial class AssetsLiabilities : Migration
                 CreatedAt = t.Column<DateTime>(type: "datetime2", nullable: false),
                 UpdatedAt = t.Column<DateTime>(type: "datetime2", nullable: true)
             },
-            c => c.PrimaryKey("PK_Liabilities", x => x.Id));
+            c => c.PrimaryKey("PK_Liabilities", new[] { "Id" }));
 
         m.CreateTable(
             "AssetValuations",
@@ -60,7 +60,7 @@ public partial class AssetsLiabilities : Migration
             },
             c =>
             {
-                c.PrimaryKey("PK_AssetValuations", x => x.Id);
+                c.PrimaryKey("PK_AssetValuations", new[] { "Id" });
                 c.ForeignKey("FK_AssetValuations_Assets_AssetId", x => x.AssetId, "Assets", "Id", onDelete: ReferentialAction.Cascade);
             });
 
@@ -80,7 +80,7 @@ public partial class AssetsLiabilities : Migration
             },
             c =>
             {
-                c.PrimaryKey("PK_LiabilityRepayments", x => x.Id);
+                c.PrimaryKey("PK_LiabilityRepayments", new[] { "Id" });
                 c.ForeignKey("FK_LiabilityRepayments_Liabilities_LiabilityId", x => x.LiabilityId, "Liabilities", "Id", onDelete: ReferentialAction.Cascade);
             });
 
