@@ -18,7 +18,17 @@ jobs:
       - name: Restore
         run: dotnet restore PersonalWealth.sln
       - name: Build
-        run: dotnet build PersonalWealth.sln --no-restore --configuration Release
+        shell: bash
+        run: |
+          set -o pipefail
+          dotnet build PersonalWealth.sln --no-restore --configuration Release 2>&1 | tee dotnet-build.log
+      - name: Upload .NET build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-build-log
+          path: dotnet-build.log
+          if-no-files-found: error
       - name: Test
         run: dotnet test PersonalWealth.sln --no-build --configuration Release --logger "trx;LogFileName=test-results.trx"
 
