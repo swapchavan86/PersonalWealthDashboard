@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PersonalWealth.Application.Tenancy;
 using PersonalWealth.Domain.Banking;
 using PersonalWealth.Domain.Entities;
+using PersonalWealth.Domain.Expenses;
 using PersonalWealth.Infrastructure.Persistence.Outbox;
 using PersonalWealth.Infrastructure.Persistence.ProcessedEvents;
 
@@ -12,8 +13,7 @@ public class PersonalWealthDbContext(
     ITenantContext tenantContext)
     : DbContext(options)
 {
-    private readonly ITenantContext tenantContext = tenantContext
-        ?? throw new ArgumentNullException(nameof(tenantContext));
+    private readonly ITenantContext tenantContext = tenantContext ?? throw new ArgumentNullException(nameof(tenantContext));
 
     internal Guid CurrentTenantId => tenantContext.TenantId;
 
@@ -23,11 +23,11 @@ public class PersonalWealthDbContext(
     public DbSet<BankTransaction> BankTransactions => Set<BankTransaction>();
     public DbSet<ImportIdentity> ImportIdentities => Set<ImportIdentity>();
     public DbSet<ImportDuplicateDecision> ImportDuplicateDecisions => Set<ImportDuplicateDecision>();
+    public DbSet<ExpenseCategory> ExpenseCategories => Set<ExpenseCategory>();
+    public DbSet<Expense> Expenses => Set<Expense>();
+    public DbSet<RecurringExpense> RecurringExpenses => Set<RecurringExpense>();
 
-    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
-    {
-        PersistenceModelConventions.Configure(configurationBuilder);
-    }
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) => PersistenceModelConventions.Configure(configurationBuilder);
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess = true)
     {
@@ -36,9 +36,7 @@ public class PersonalWealthDbContext(
         return base.SaveChanges(acceptAllChangesOnSuccess);
     }
 
-    public override Task<int> SaveChangesAsync(
-        bool acceptAllChangesOnSuccess,
-        CancellationToken cancellationToken = default)
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
     {
         TenantPersistenceEnforcement.Validate(ChangeTracker, tenantContext);
         PersistenceAuditMetadata.Apply(ChangeTracker, DateTime.UtcNow);
