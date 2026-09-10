@@ -10,4 +10,9 @@ Discover supported documents without mixing discovery with business import.
 - Tests cover repeated scans.
 
 ## Status
-Ready
+Implemented
+
+## Implementation
+- Added `IDocumentScanner` and `FileSystemDocumentScanner`.
+- Discovery is top-level, extension-filtered, deterministic and excludes temporary Office lock files.
+- Scanner returns document candidates only and performs no import or canonical persistence.
