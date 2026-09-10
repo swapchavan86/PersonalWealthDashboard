@@ -1,20 +1,20 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PersonalWealth.Application.Banking;
 using PersonalWealth.Application.Documents;
 using PersonalWealth.Application.Documents.Business;
 using PersonalWealth.Application.Documents.Staging;
+using PersonalWealth.Application.Expenses;
+using PersonalWealth.Infrastructure.Banking;
 using PersonalWealth.Infrastructure.Documents.Business;
 using PersonalWealth.Infrastructure.Documents.Staging;
-using PersonalWealth.Infrastructure.Banking;
-using PersonalWealth.Application.Banking;
+using PersonalWealth.Infrastructure.Expenses;
 
 namespace PersonalWealth.Infrastructure.Documents;
 
 public static class DocumentServiceCollectionExtensions
 {
-    public static IServiceCollection AddDocumentServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddDocumentServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddOptions<DocumentStorageOptions>()
             .Bind(configuration.GetSection(DocumentStorageOptions.SectionName))
@@ -36,6 +36,11 @@ public static class DocumentServiceCollectionExtensions
         services.AddScoped<IStatementReconciler, StatementReconciler>();
         services.AddScoped<IBankImportService, EfBankImportService>();
         services.AddScoped<IFirstBankImportWorkflow, FirstBankImportWorkflow>();
+        services.AddScoped<IExpenseCategoryRepository, EfExpenseCategoryRepository>();
+        services.AddScoped<IExpenseRepository, EfExpenseRepository>();
+        services.AddScoped<IRecurringExpenseRepository, EfRecurringExpenseRepository>();
+        services.AddScoped<IExpenseReportingRepository, EfExpenseReportingRepository>();
+        services.AddScoped<IExpenseService, ExpenseService>();
 
         return services;
     }
