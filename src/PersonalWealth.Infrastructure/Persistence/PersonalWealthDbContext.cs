@@ -1,10 +1,19 @@
 using Microsoft.EntityFrameworkCore;
+using PersonalWealth.Application.Tenancy;
+using PersonalWealth.Domain.Entities;
 
 namespace PersonalWealth.Infrastructure.Persistence;
 
-public sealed class PersonalWealthDbContext(DbContextOptions<PersonalWealthDbContext> options)
+public class PersonalWealthDbContext(
+    DbContextOptions<PersonalWealthDbContext> options,
+    ITenantContext tenantContext)
     : DbContext(options)
 {
+    private readonly ITenantContext tenantContext = tenantContext
+        ?? throw new ArgumentNullException(nameof(tenantContext));
+
+    internal Guid CurrentTenantId => tenantContext.TenantId;
+
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         PersistenceModelConventions.Configure(configurationBuilder);
@@ -12,6 +21,7 @@ public sealed class PersonalWealthDbContext(DbContextOptions<PersonalWealthDbCon
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess = true)
     {
+        TenantPersistenceEnforcement.Validate(ChangeTracker, tenantContext);
         PersistenceAuditMetadata.Apply(ChangeTracker, DateTime.UtcNow);
         return base.SaveChanges(acceptAllChangesOnSuccess);
     }
@@ -20,6 +30,7 @@ public sealed class PersonalWealthDbContext(DbContextOptions<PersonalWealthDbCon
         bool acceptAllChangesOnSuccess,
         CancellationToken cancellationToken = default)
     {
+        TenantPersistenceEnforcement.Validate(ChangeTracker, tenantContext);
         PersistenceAuditMetadata.Apply(ChangeTracker, DateTime.UtcNow);
         return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
@@ -28,6 +39,7 @@ public sealed class PersonalWealthDbContext(DbContextOptions<PersonalWealthDbCon
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(PersonalWealthDbContext).Assembly);
         PersistenceModelConventions.Apply(modelBuilder);
+        TenantPersistenceEnforcement.ApplyQueryFilters(modelBuilder, this);
         base.OnModelCreating(modelBuilder);
     }
 }

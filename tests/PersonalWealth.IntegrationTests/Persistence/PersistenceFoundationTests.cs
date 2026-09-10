@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PersonalWealth.Application.Tenancy;
 using PersonalWealth.Infrastructure.Persistence;
 using Xunit;
 
@@ -33,6 +34,7 @@ public sealed class PersistenceFoundationTests
     {
         var configuration = ConfigurationWithConnectionString();
         using var provider = new ServiceCollection()
+            .AddSingleton<ITenantContext>(new TenantContext(Guid.NewGuid()))
             .AddPersistence(configuration)
             .BuildServiceProvider();
 
@@ -83,7 +85,7 @@ public sealed class PersistenceFoundationTests
             .UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=master;Trusted_Connection=True;")
             .Options;
 
-        return new PersonalWealthDbContext(options);
+        return new PersonalWealthDbContext(options, new TenantContext(Guid.NewGuid()));
     }
 
     private static IConfiguration ConfigurationWithConnectionString()
