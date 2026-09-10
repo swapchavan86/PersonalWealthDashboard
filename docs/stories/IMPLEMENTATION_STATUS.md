@@ -22,23 +22,47 @@ PW-BANK-001 through PW-BANK-008 are completed.
 ### Phase 5 — Expenses
 PW-EXP-001 through PW-EXP-006 are implemented. The Expense phase includes category/expense domain models, application workflows, recurring rules, reporting projections, bank-transaction linking and tests.
 
-Expense story specifications are now separated under `docs/stories/EXP/`:
-- `PW-EXP-001.md`
-- `PW-EXP-002.md`
-- `PW-EXP-003.md`
-- `PW-EXP-004.md`
-- `PW-EXP-005.md`
-- `PW-EXP-006.md`
+Expense story specifications are maintained under `docs/stories/EXP/`.
 
-## Current test fix
+## Phase 6 — Investments
 
-The reported local test failure was `Recurring_expense_respects_end_date_and_inactive_state`: the test supplied an end date of `2026-02-01` while asserting that only the `2026-01-01` occurrence exists. The recurring-expense implementation treats the configured end date as inclusive, so the test data was inconsistent with that contract.
+### Implemented
 
-The test now uses `2026-01-31`, preserving inclusive end-date semantics and verifying that the January occurrence is included while the next monthly occurrence is outside the rule's range. The inactive-state assertion remains unchanged.
+- `PW-INV-001` — Investment account/portfolio boundary and tenant-aware persistence model.
+- `PW-INV-002` — Security/instrument master with symbol, classification, currency and optional ISIN.
+- `PW-INV-003` — Investment transaction and holding model with financial precision and invariants.
+- `PW-INV-004` — Deterministic portfolio replay using transaction-date/identity ordering, weighted-average cost, realized gain/loss, dividend income and explicit fees.
+- `PW-INV-005` — Application-owned market-price provider abstraction. No external provider SDK is coupled to the core.
+- `PW-INV-006` — Deterministic portfolio valuation and unrealized gain/loss from supplied market-price snapshots.
+
+Implementation artifacts include:
+
+- Domain investment entities under `src/PersonalWealth.Domain/Investments/`.
+- Application portfolio and valuation engines under `src/PersonalWealth.Application/Investments/`.
+- EF Core mappings under `src/PersonalWealth.Infrastructure/Persistence/Configurations/InvestmentConfigurations.cs`.
+- Investment DbSets registered in `PersonalWealthDbContext`.
+- Source-controlled investment migration `20260910170000_Investments`.
+- Unit coverage under `tests/PersonalWealth.UnitTests/Investments/InvestmentPortfolioTests.cs`.
+- Accounting methodology recorded in `docs/adr/ADR-INV-001-Investment-Accounting-Methodology.md`.
+
+### Pending
+
+- `PW-INV-007` — Corporate-action handling foundation.
+- `PW-INV-008` — Investment import templates.
+- `PW-INV-009` — Investment reconciliation.
+- `PW-INV-010` — Investment integration tests.
+
+The remaining Investment stories are intentionally not implemented prematurely. Corporate actions, import contracts and reconciliation rules require their own explicit boundaries and test fixtures.
+
+## Current validation note
+
+The latest GitHub commit sequence implements the Investment milestone directly on `main`, but GitHub Actions does not currently provide a workflow result for the latest merge state. Therefore this document does not claim a green CI run. Local validation should run `dotnet build` followed by `dotnet test` against the current `main` state before treating the milestone as release-ready.
+
+The previous Expense follow-up corrected `Recurring_expense_respects_end_date_and_inactive_state` by changing the fixture end date to `2026-01-31`, matching the implementation's inclusive end-date semantics.
 
 ## Remaining implementation order
 
-1. Phase 6 — Investments: PW-INV-001 through PW-INV-010.
+1. Finish Phase 6 — Investments: PW-INV-007 through PW-INV-010.
 2. Phase 7 — Assets: PW-ASSET-001 through PW-ASSET-005.
 3. Phase 8 — Liabilities: PW-LIAB-001 through PW-LIAB-007.
 4. Phase 9 — Wealth Engine: PW-WEALTH-001 through PW-WEALTH-008.
@@ -51,7 +75,3 @@ The test now uses `2026-01-31`, preserving inclusive end-date semantics and veri
 11. Phase 16 — Deployment and Production Hardening: PW-OPS-001 through PW-OPS-008.
 
 Stories should continue in backlog order unless an ADR explicitly changes the dependency. Sequential stories may be batched into one branch/PR when they form a complete, testable checkpoint.
-
-## Validation status
-
-The user-reported run reached successful compilation of the Domain, Contracts, Application, Infrastructure, Worker, API and test projects. Before this follow-up change, 60 unit tests passed and one recurring-expense unit test failed; 20 integration tests and 17 architecture tests passed. The corrected test has not been executed by this GitHub-only workflow, so the branch should be validated locally with `dotnet build` and `dotnet test` before merge.
