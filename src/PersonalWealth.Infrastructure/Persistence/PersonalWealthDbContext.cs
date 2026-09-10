@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PersonalWealth.Application.Tenancy;
+using PersonalWealth.Domain.Banking;
 using PersonalWealth.Domain.Entities;
 using PersonalWealth.Infrastructure.Persistence.Outbox;
 using PersonalWealth.Infrastructure.Persistence.ProcessedEvents;
@@ -18,6 +19,10 @@ public class PersonalWealthDbContext(
 
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
     public DbSet<ProcessedEvent> ProcessedEvents => Set<ProcessedEvent>();
+    public DbSet<BankAccount> BankAccounts => Set<BankAccount>();
+    public DbSet<BankTransaction> BankTransactions => Set<BankTransaction>();
+    public DbSet<ImportIdentity> ImportIdentities => Set<ImportIdentity>();
+    public DbSet<ImportDuplicateDecision> ImportDuplicateDecisions => Set<ImportDuplicateDecision>();
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
