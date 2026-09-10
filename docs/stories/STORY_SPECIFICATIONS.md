@@ -1,6 +1,6 @@
 # Story Specifications
 
-This document expands every story in `MASTER_BACKLOG.md`. Codex must treat the story ID and acceptance criteria here as the contract. A story is complete only when its acceptance criteria, tests, architecture constraints, security requirements, and validation are satisfied.
+This document is the cross-phase story specification catalog. Codex must treat the story ID and acceptance criteria as the contract. Where a phase has dedicated story files under `docs/stories/<PHASE>/`, those per-story files are the canonical specification for that phase. This catalog remains a consolidated reference for the full backlog.
 
 ## CORE
 
@@ -131,23 +131,14 @@ Goal: Validate the complete first-bank flow. Acceptance: representative fixtures
 
 ## EXP
 
-### PW-EXP-001 — Create expense/category domain model
-Goal: Model expense categories and canonical expenses. Acceptance: category hierarchy/rules and expense invariants are defined.
+Expense story specifications are maintained individually under `docs/stories/EXP/`:
 
-### PW-EXP-002 — Implement expense application use cases
-Goal: Implement create/update/query expense workflows through Application interfaces.
-
-### PW-EXP-003 — Implement recurring expense rules
-Goal: Model recurring expense definitions and occurrence logic deterministically.
-
-### PW-EXP-004 — Implement expense aggregation/reporting queries
-Goal: Provide application query models for category/month/trend analysis without leaking database concerns.
-
-### PW-EXP-005 — Link bank transactions to expenses/categories
-Goal: Connect banking data to expense classification without coupling modules unnecessarily.
-
-### PW-EXP-006 — Add expense tests
-Goal: Cover category, recurrence, aggregation and transaction-linking behavior.
+- `PW-EXP-001.md` — Create expense/category domain model
+- `PW-EXP-002.md` — Implement expense application use cases
+- `PW-EXP-003.md` — Implement recurring expense rules
+- `PW-EXP-004.md` — Implement expense aggregation/reporting queries
+- `PW-EXP-005.md` — Link bank transactions to expenses/categories
+- `PW-EXP-006.md` — Add expense tests
 
 ## INV
 
@@ -362,48 +353,39 @@ Goal: Ensure AI is optional, bounded, privacy-aware, auditable and non-authorita
 Goal: Provide controlled operational configuration.
 
 ### PW-ADMIN-002 — Create import/job monitoring
-Goal: Provide status and failure visibility for background work.
+Goal: Provide status and operational visibility for background processing.
 
 ### PW-ADMIN-003 — Create audit/diagnostic views
-Goal: Expose safe audit and diagnostics without exposing secrets.
+Goal: Provide controlled audit and diagnostics without exposing sensitive internals.
 
 ### PW-ADMIN-004 — Add operational controls and health checks
-Goal: Provide controlled operational actions and health/readiness checks.
+Goal: Provide safe operational controls and health visibility.
 
 ## OPS
 
 ### PW-OPS-001 — Configure local IIS deployment
-Goal: Support the initial local/server deployment model with environment-specific configuration.
+Goal: Establish repeatable local IIS deployment.
 
 ### PW-OPS-002 — Configure Docker/container deployment
-Goal: Provide reproducible container deployment without embedding secrets.
+Goal: Establish repeatable container deployment.
 
 ### PW-OPS-003 — Configure CI build/test pipeline
-Goal: Automatically restore, build, test and validate architecture.
+Goal: Build and test the solution automatically in CI.
 
 ### PW-OPS-004 — Configure secure production configuration/secrets
-Goal: Document and implement secure production secret injection through environment/managed secret configuration.
+Goal: Externalize production secrets and configuration securely.
 
 ### PW-OPS-005 — Configure structured logging and correlation
-Goal: Provide production diagnostics with sensitive-data minimization.
+Goal: Establish structured logs and correlation identifiers.
 
 ### PW-OPS-006 — Configure metrics/tracing/health endpoints
-Goal: Provide operational telemetry and health reporting.
+Goal: Establish production observability.
 
 ### PW-OPS-007 — Perform security and tenant-isolation hardening
-Goal: Threat-model and test authentication, authorization, tenant isolation, secrets and sensitive data handling.
+Goal: Validate security boundaries and tenant isolation.
 
 ### PW-OPS-008 — Perform production readiness validation
-Goal: Validate deployment, migrations, rollback, backups, observability, security, performance and operational runbooks.
+Goal: Validate deployment, security, reliability, observability and operational readiness.
 
-## Mandatory cross-story rules
-1. EF Core Code First is mandatory for persistence.
-2. Database schema is derived from domain/business requirements and is versioned through migrations.
-3. Application interfaces must be used for infrastructure-dependent use cases, following SOLID and dependency inversion strongly.
-4. Domain remains framework/infrastructure independent.
-5. Business calculations are deterministic and testable.
-6. AI is interpretation-only and optional.
-7. Local secrets are never committed. Production secrets are externalized to secure environment/secret-management configuration.
-8. Code comments are limited and English-only.
-9. Tenant isolation is designed from the beginning and tested whenever tenant-owned data is involved.
-10. Each story normally produces one feature branch and one PR. Codex must not merge.
+## Global Acceptance Rules
+Every story must preserve Clean Architecture, SOLID, tenant isolation, deterministic financial calculations, secure configuration, limited English-only comments, testability and production quality. No story may silently implement future business features. EF Core is Code First and migrations are source-controlled. Local secrets are local-only; production secrets are supplied by secure environment/secret-management configuration.
