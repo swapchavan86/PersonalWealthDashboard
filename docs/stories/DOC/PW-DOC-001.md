@@ -10,4 +10,9 @@ Define the local-first folder structure for imported financial documents.
 - No secrets are stored in repository folders.
 
 ## Status
-Ready
+Implemented
+
+## Implementation
+- Added `DocumentStorageOptions` with configurable root, incoming, processed, failed and archive folders.
+- Added `DocumentFolderProvider` with explicit folder initialization.
+- Registered document storage services through Infrastructure dependency injection.
