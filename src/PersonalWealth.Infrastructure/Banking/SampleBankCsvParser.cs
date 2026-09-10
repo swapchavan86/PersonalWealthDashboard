@@ -36,9 +36,10 @@ public sealed class SampleBankCsvParser : IBankDocumentParser
             var balance = ParseDecimal(map["Balance"]);
             if (debit is null && credit is null) { errors.Add(new(i + 1, "DOC_AMOUNT_MISSING", "Debit or credit amount is required.")); continue; }
             if (debit is not null && credit is not null && debit != 0m && credit != 0m) { errors.Add(new(i + 1, "DOC_AMOUNT_AMBIGUOUS", "Debit and credit cannot both contain non-zero values.")); continue; }
-            var amount = Math.Abs(credit ?? debit ?? 0m);
+            var amountValue = credit is not null && credit != 0m ? credit : debit;
+            var amount = Math.Abs(amountValue ?? 0m);
             if (amount == 0m) { errors.Add(new(i + 1, "DOC_AMOUNT_ZERO", "Transaction amount must be greater than zero.")); continue; }
-            var direction = credit is > 0m ? "Credit" : "Debit";
+            var direction = credit is not null && credit != 0m ? "Credit" : "Debit";
             var description = string.Join(' ', map["Description"].Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries));
             var account = map["AccountNumber"].Trim();
             if (string.IsNullOrWhiteSpace(description) || string.IsNullOrWhiteSpace(account)) { errors.Add(new(i + 1, "DOC_REQUIRED_VALUE", "Description and account number are required.")); continue; }

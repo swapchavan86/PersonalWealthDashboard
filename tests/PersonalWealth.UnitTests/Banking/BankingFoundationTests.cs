@@ -29,6 +29,8 @@ public sealed class BankingFoundationTests
         Assert.Equal("Salary Payment", result.Rows.First().Description);
         Assert.Equal("Credit", result.Rows.First().Direction);
         Assert.Equal(50000m, result.Rows.First().Amount);
+        Assert.Equal("Debit", result.Rows.Last().Direction);
+        Assert.Equal(1000m, result.Rows.Last().Amount);
     }
 
     [Fact]
