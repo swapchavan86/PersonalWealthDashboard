@@ -35,6 +35,7 @@ public static class DocumentServiceCollectionExtensions
         services.AddScoped<ITransferDetector, TransferDetector>();
         services.AddScoped<IStatementReconciler, StatementReconciler>();
         services.AddScoped<IBankImportService, EfBankImportService>();
+        services.AddScoped<IFirstBankImportWorkflow, FirstBankImportWorkflow>();
 
         return services;
     }
