@@ -10,4 +10,8 @@ Track source documents and deterministic content identity.
 - No raw secret material is logged.
 
 ## Status
-Ready
+Implemented
+
+## Implementation
+- Added `DocumentMetadata` and `DocumentDescriptor` application contracts.
+- Added `IDocumentHasher` and Infrastructure SHA-256 implementation using streamed file access.

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Microsoft.EntityFrameworkCore.Migrations;
 using PersonalWealth.Infrastructure.Persistence;
 
 #nullable disable
@@ -10,9 +10,10 @@ using PersonalWealth.Infrastructure.Persistence;
 namespace PersonalWealth.Infrastructure.Persistence.Migrations;
 
 [DbContext(typeof(PersonalWealthDbContext))]
-partial class PersonalWealthDbContextModelSnapshot : ModelSnapshot
+[Migration("20260910090000_EventReliability")]
+partial class EventReliability
 {
-    protected override void BuildModel(ModelBuilder modelBuilder)
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
 #pragma warning disable 612, 618
         modelBuilder

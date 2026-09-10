@@ -30,9 +30,10 @@ public sealed class EventHandlerRegistry
             handler.HandleAsync((TEvent)domainEvent, cancellationToken));
     }
 
-    public IEventBus CreateEventBus() =>
+    public IEventBus CreateEventBus(IProcessedEventStore? processedEventStore = null) =>
         new InProcessEventBus(
             handlers.ToDictionary(
                 pair => pair.Key,
-                pair => (IReadOnlyList<Func<IDomainEvent, CancellationToken, Task>>)[..pair.Value]));
+                pair => (IReadOnlyList<Func<IDomainEvent, CancellationToken, Task>>)[..pair.Value]),
+            processedEventStore);
 }
