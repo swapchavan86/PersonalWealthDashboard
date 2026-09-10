@@ -21,7 +21,7 @@ public static class PersistenceModelConventions
                 var idProperty = entityType.FindProperty("Id");
                 if (idProperty is not null)
                 {
-                    entityType.SetPrimaryKey(idProperty);
+                    modelBuilder.Entity(entityType.ClrType).HasKey("Id");
                 }
             }
 
