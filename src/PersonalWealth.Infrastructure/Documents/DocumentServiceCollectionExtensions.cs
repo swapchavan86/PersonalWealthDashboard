@@ -24,6 +24,7 @@ public static class DocumentServiceCollectionExtensions
         services.AddSingleton<IDocumentTemplateSelector, DocumentTemplateSelector>();
         services.AddSingleton<ITransactionBusinessValidator, TransactionBusinessValidator>();
         services.AddSingleton<IImportStagingStore, InMemoryImportStagingStore>();
+        services.AddSingleton<ImportLifecycleService>();
 
         return services;
     }
