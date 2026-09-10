@@ -5,12 +5,15 @@ namespace PersonalWealth.Application.Events;
 public sealed class InProcessEventBus : IEventBus
 {
     private readonly IReadOnlyDictionary<Type, IReadOnlyList<Func<IDomainEvent, CancellationToken, Task>>> handlers;
+    private readonly IProcessedEventStore? processedEventStore;
 
     public InProcessEventBus(
-        IReadOnlyDictionary<Type, IReadOnlyList<Func<IDomainEvent, CancellationToken, Task>>> handlers)
+        IReadOnlyDictionary<Type, IReadOnlyList<Func<IDomainEvent, CancellationToken, Task>>> handlers,
+        IProcessedEventStore? processedEventStore = null)
     {
         ArgumentNullException.ThrowIfNull(handlers);
         this.handlers = handlers;
+        this.processedEventStore = processedEventStore;
     }
 
     public async Task PublishAsync(
@@ -19,15 +22,28 @@ public sealed class InProcessEventBus : IEventBus
     {
         ArgumentNullException.ThrowIfNull(domainEvent);
 
-        if (!handlers.TryGetValue(domainEvent.GetType(), out var eventHandlers))
+        if (processedEventStore is not null &&
+            await processedEventStore.HasProcessedAsync(domainEvent.EventId, cancellationToken))
         {
             return;
         }
 
-        foreach (var handler in eventHandlers)
+        if (handlers.TryGetValue(domainEvent.GetType(), out var eventHandlers))
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            await handler(domainEvent, cancellationToken);
+            foreach (var handler in eventHandlers)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await handler(domainEvent, cancellationToken);
+            }
+        }
+
+        if (processedEventStore is not null)
+        {
+            await processedEventStore.MarkProcessedAsync(
+                domainEvent.EventId,
+                domainEvent.GetType().AssemblyQualifiedName ?? domainEvent.GetType().FullName ?? domainEvent.GetType().Name,
+                DateTimeOffset.UtcNow,
+                cancellationToken);
         }
     }
 }
