@@ -6,6 +6,7 @@
   <ItemGroup>
     <ProjectReference Include="../../src/PersonalWealth.Domain/PersonalWealth.Domain.csproj" />
     <ProjectReference Include="../../src/PersonalWealth.Application/PersonalWealth.Application.csproj" />
+    <ProjectReference Include="../../src/PersonalWealth.Infrastructure/PersonalWealth.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
