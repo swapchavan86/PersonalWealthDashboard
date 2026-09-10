@@ -4,52 +4,52 @@ This backlog is the implementation contract for Codex. Stories are executed in o
 
 ## Phase 0 — Engineering Foundation
 - PW-CORE-001 Create solution structure [implemented]
-- PW-CORE-002 Enforce Clean Architecture dependency rules
-- PW-CORE-003 Create base entity contracts
-- PW-CORE-004 Create tenant-aware entity contract
-- PW-CORE-005 Create domain event contract
-- PW-CORE-006 Create application result/error model
-- PW-CORE-007 Harden architecture test suite
+- PW-CORE-002 Enforce Clean Architecture dependency rules [implemented]
+- PW-CORE-003 Create base entity contracts [implemented]
+- PW-CORE-004 Create tenant-aware entity contract [implemented]
+- PW-CORE-005 Create domain event contract [implemented]
+- PW-CORE-006 Create application result/error model [implemented]
+- PW-CORE-007 Harden architecture test suite [implemented]
 
 ## Phase 1 — Database Foundation
-- PW-DB-001 Configure SQL Server and environment configuration
-- PW-DB-002 Configure EF Core Code First conventions
-- PW-DB-003 Create initial database migration
-- PW-DB-004 Add audit and concurrency conventions
-- PW-DB-005 Add tenant isolation/query filtering foundation
-- PW-DB-006 Add database integration-test infrastructure
+- PW-DB-001 Configure SQL Server and environment configuration [implemented]
+- PW-DB-002 Configure EF Core Code First conventions [implemented]
+- PW-DB-003 Create initial database migration [implemented]
+- PW-DB-004 Add audit and concurrency conventions [implemented]
+- PW-DB-005 Add tenant isolation/query filtering foundation [implemented]
+- PW-DB-006 Add database integration-test infrastructure [implemented]
 
 ## Phase 2 — Events and Reliability
-- PW-EVENT-001 Create event bus abstraction
-- PW-EVENT-002 Implement in-process event bus
-- PW-EVENT-003 Register event handlers and dispatching rules
-- PW-EVENT-004 Implement transactional outbox
-- PW-EVENT-005 Implement outbox publisher worker
-- PW-EVENT-006 Implement idempotency and processed-event handling
+- PW-EVENT-001 Create event bus abstraction [implemented]
+- PW-EVENT-002 Implement in-process event bus [implemented]
+- PW-EVENT-003 Register event handlers and dispatching rules [implemented]
+- PW-EVENT-004 Implement transactional outbox [implemented]
+- PW-EVENT-005 Implement outbox publisher worker [implemented]
+- PW-EVENT-006 Implement idempotency and processed-event handling [implemented]
 
 ## Phase 3 — Documents and Deterministic Import
-- PW-DOC-001 Configure master data/document folders
-- PW-DOC-002 Create document metadata and hashing
-- PW-DOC-003 Implement folder scanner and file discovery
-- PW-DOC-004 Define import template abstraction
-- PW-DOC-005 Define tabular template/schema model
-- PW-DOC-006 Implement schema and structural validation
-- PW-DOC-007 Implement business validation pipeline
-- PW-DOC-008 Implement staging and import lifecycle
-- PW-DOC-009 Implement duplicate detection and idempotent import
-- PW-DOC-010 Implement canonical import commit and import events
-- PW-DOC-011 Implement first bank-statement document template
-- PW-DOC-012 Implement bank document parsing/normalization adapter
+- PW-DOC-001 Configure master data/document folders [implemented]
+- PW-DOC-002 Create document metadata and hashing [implemented]
+- PW-DOC-003 Implement folder scanner and file discovery [implemented]
+- PW-DOC-004 Define import template abstraction [implemented]
+- PW-DOC-005 Define tabular template/schema model [implemented]
+- PW-DOC-006 Implement schema and structural validation [implemented]
+- PW-DOC-007 Implement business validation pipeline [implemented]
+- PW-DOC-008 Implement staging and import lifecycle [implemented]
+- PW-DOC-009 Implement duplicate detection and idempotent import [implemented]
+- PW-DOC-010 Implement canonical import commit and import events [implemented]
+- PW-DOC-011 Implement first bank-statement document template [implemented]
+- PW-DOC-012 Implement bank document parsing/normalization adapter [implemented]
 
 ## Phase 4 — Banking
-- PW-BANK-001 Create bank account domain model
-- PW-BANK-002 Create bank transaction domain model
-- PW-BANK-003 Implement banking application interfaces/use cases
-- PW-BANK-004 Implement bank transaction categorization and normalization
-- PW-BANK-005 Implement transfer detection and linking
-- PW-BANK-006 Implement reconciliation and statement balance rules
-- PW-BANK-007 Implement bank import business workflow
-- PW-BANK-008 Add banking integration tests and invariants
+- PW-BANK-001 Create bank account domain model [implemented]
+- PW-BANK-002 Create bank transaction domain model [implemented]
+- PW-BANK-003 Implement banking application interfaces/use cases [implemented]
+- PW-BANK-004 Implement bank transaction categorization and normalization [implemented]
+- PW-BANK-005 Implement transfer detection and linking [implemented]
+- PW-BANK-006 Implement reconciliation and statement balance rules [implemented]
+- PW-BANK-007 Implement bank import business workflow [implemented]
+- PW-BANK-008 Add banking integration tests and invariants [implemented]
 
 ## Phase 5 — Expenses
 - PW-EXP-001 Create expense/category domain model [implemented]

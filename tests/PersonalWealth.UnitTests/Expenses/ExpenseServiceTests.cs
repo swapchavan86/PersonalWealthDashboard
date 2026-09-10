@@ -63,7 +63,7 @@ public sealed class ExpenseServiceTests
     [Fact]
     public void Recurring_expense_respects_end_date_and_inactive_state()
     {
-        var rule = new RecurringExpense(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), new DateTime(2026, 1, 1), 500m, "Subscription", RecurrenceFrequency.Monthly, 1, new DateTime(2026, 2, 1));
+        var rule = new RecurringExpense(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), new DateTime(2026, 1, 1), 500m, "Subscription", RecurrenceFrequency.Monthly, 1, new DateTime(2026, 1, 31));
         Assert.Single(rule.GetOccurrences(new DateTime(2026, 1, 1), new DateTime(2026, 12, 31)));
         rule.Deactivate();
         Assert.Empty(rule.GetOccurrences(new DateTime(2026, 1, 1), new DateTime(2026, 12, 31)));
