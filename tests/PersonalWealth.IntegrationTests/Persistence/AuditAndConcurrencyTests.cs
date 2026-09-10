@@ -82,8 +82,13 @@ public sealed class AuditAndConcurrencyTests
         }
     }
 
-    private sealed class TestPersistenceEntity(Guid id) : Entity<Guid>(id), IAuditableEntity, IConcurrencyTracked
+    private sealed class TestPersistenceEntity : Entity<Guid>, IAuditableEntity, IConcurrencyTracked
     {
+        public TestPersistenceEntity(Guid id)
+            : base(id)
+        {
+        }
+
         public DateTime CreatedAt { get; private set; }
 
         public DateTime? UpdatedAt { get; private set; }
