@@ -22,7 +22,7 @@ public sealed class PersonalWealthDbContextFactory
             .UseSqlServer(connectionString)
             .Options;
 
-        return new PersonalWealthDbContext(options);
+        return new PersonalWealthDbContext(options, new TenantContext(Guid.NewGuid()));
     }
 
     private static IConfiguration BuildConfiguration()
