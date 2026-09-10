@@ -5,6 +5,8 @@ using PersonalWealth.Application.Documents.Business;
 using PersonalWealth.Application.Documents.Staging;
 using PersonalWealth.Infrastructure.Documents.Business;
 using PersonalWealth.Infrastructure.Documents.Staging;
+using PersonalWealth.Infrastructure.Banking;
+using PersonalWealth.Application.Banking;
 
 namespace PersonalWealth.Infrastructure.Documents;
 
@@ -25,6 +27,14 @@ public static class DocumentServiceCollectionExtensions
         services.AddSingleton<ITransactionBusinessValidator, TransactionBusinessValidator>();
         services.AddSingleton<IImportStagingStore, InMemoryImportStagingStore>();
         services.AddSingleton<ImportLifecycleService>();
+        services.AddSingleton<IBankDocumentParser, SampleBankCsvParser>();
+        services.AddScoped<IBankAccountRepository, EfBankAccountRepository>();
+        services.AddScoped<IBankTransactionRepository, EfBankTransactionRepository>();
+        services.AddScoped<ITransactionNormalizer, TransactionNormalizer>();
+        services.AddScoped<ITransactionCategorizer, RuleBasedTransactionCategorizer>();
+        services.AddScoped<ITransferDetector, TransferDetector>();
+        services.AddScoped<IStatementReconciler, StatementReconciler>();
+        services.AddScoped<IBankImportService, EfBankImportService>();
 
         return services;
     }
