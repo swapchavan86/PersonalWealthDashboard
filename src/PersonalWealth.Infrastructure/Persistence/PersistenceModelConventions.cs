@@ -16,13 +16,10 @@ public static class PersistenceModelConventions
     {
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
-            if (entityType.FindPrimaryKey() is null)
+            if (entityType.FindPrimaryKey() is null &&
+                entityType.ClrType.GetProperty("Id") is not null)
             {
-                var idProperty = entityType.FindProperty("Id");
-                if (idProperty is not null)
-                {
-                    modelBuilder.Entity(entityType.ClrType).HasKey("Id");
-                }
+                modelBuilder.Entity(entityType.ClrType).HasKey("Id");
             }
 
             if (!typeof(IConcurrencyTracked).IsAssignableFrom(entityType.ClrType))
