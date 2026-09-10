@@ -26,9 +26,14 @@ public sealed class EfCoreProcessedEventStore(PersonalWealthDbContext dbContext)
         {
             await dbContext.SaveChangesAsync(cancellationToken);
         }
-        catch (DbUpdateException) when (await HasProcessedAsync(eventId, cancellationToken))
+        catch (DbUpdateException)
         {
             dbContext.Entry(processedEvent).State = EntityState.Detached;
+
+            if (!await HasProcessedAsync(eventId, cancellationToken))
+            {
+                throw;
+            }
         }
     }
 }
