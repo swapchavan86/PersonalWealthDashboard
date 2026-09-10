@@ -30,7 +30,17 @@ jobs:
           path: dotnet-build.log
           if-no-files-found: error
       - name: Test
-        run: dotnet test PersonalWealth.sln --no-build --configuration Release --logger "trx;LogFileName=test-results.trx"
+        shell: bash
+        run: |
+          set -o pipefail
+          dotnet test PersonalWealth.sln --no-build --configuration Release --logger "trx;LogFileName=test-results.trx" 2>&1 | tee dotnet-test.log
+      - name: Upload .NET test log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-test-log
+          path: dotnet-test.log
+          if-no-files-found: error
 
   angular:
     runs-on: ubuntu-latest
