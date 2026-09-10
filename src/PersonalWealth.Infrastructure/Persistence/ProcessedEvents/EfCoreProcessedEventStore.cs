@@ -19,7 +19,16 @@ public sealed class EfCoreProcessedEventStore(PersonalWealthDbContext dbContext)
             return;
         }
 
-        dbContext.ProcessedEvents.Add(ProcessedEvent.Create(eventId, eventType, processedAtUtc));
-        await dbContext.SaveChangesAsync(cancellationToken);
+        var processedEvent = ProcessedEvent.Create(eventId, eventType, processedAtUtc);
+        dbContext.ProcessedEvents.Add(processedEvent);
+
+        try
+        {
+            await dbContext.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException) when (await HasProcessedAsync(eventId, cancellationToken))
+        {
+            dbContext.Entry(processedEvent).State = EntityState.Detached;
+        }
     }
 }
