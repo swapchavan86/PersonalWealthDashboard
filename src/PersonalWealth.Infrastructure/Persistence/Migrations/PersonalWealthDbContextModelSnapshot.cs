@@ -23,44 +23,30 @@ partial class PersonalWealthDbContextModelSnapshot : ModelSnapshot
 
         modelBuilder.Entity("PersonalWealth.Infrastructure.Persistence.Outbox.OutboxMessage", b =>
         {
-            b.Property<Guid>("EventId")
-                .ValueGeneratedNever()
-                .HasColumnType("uniqueidentifier");
-
-            b.Property<DateTimeOffset>("CreatedAtUtc")
-                .HasColumnType("datetimeoffset");
-
-            b.Property<string>("EventType")
-                .IsRequired()
-                .HasMaxLength(512)
-                .HasColumnType("nvarchar(512)");
-
-            b.Property<DateTimeOffset>("OccurredAtUtc")
-                .HasColumnType("datetimeoffset");
-
-            b.Property<DateTimeOffset?>("PublishedAtUtc")
-                .HasColumnType("datetimeoffset");
-
-            b.Property<string>("Payload")
-                .IsRequired()
-                .HasColumnType("nvarchar(max)");
-
-            b.Property<byte[]>("RowVersion")
-                .IsRowVersion()
-                .IsConcurrencyToken()
-                .ValueGeneratedOnAddOrUpdate()
-                .HasColumnType("rowversion");
-
-            b.Property<Guid?>("TenantId")
-                .HasColumnType("uniqueidentifier");
-
+            b.Property<Guid>("EventId").ValueGeneratedNever().HasColumnType("uniqueidentifier");
+            b.Property<int>("AttemptCount").HasColumnType("int");
+            b.Property<DateTimeOffset>("CreatedAtUtc").HasColumnType("datetimeoffset");
+            b.Property<string>("EventType").IsRequired().HasMaxLength(512).HasColumnType("nvarchar(512)");
+            b.Property<string>("LastError").HasMaxLength(4000).HasColumnType("nvarchar(4000)");
+            b.Property<DateTimeOffset?>("NextAttemptAtUtc").HasColumnType("datetimeoffset");
+            b.Property<DateTimeOffset>("OccurredAtUtc").HasColumnType("datetimeoffset");
+            b.Property<string>("Payload").IsRequired().HasColumnType("nvarchar(max)");
+            b.Property<DateTimeOffset?>("PublishedAtUtc").HasColumnType("datetimeoffset");
+            b.Property<byte[]>("RowVersion").IsRowVersion().IsConcurrencyToken().ValueGeneratedOnAddOrUpdate().HasColumnType("rowversion");
+            b.Property<Guid?>("TenantId").HasColumnType("uniqueidentifier");
             b.HasKey("EventId");
-
-            b.HasIndex("PublishedAtUtc", "CreatedAtUtc");
-
-            b.HasIndex("TenantId", "PublishedAtUtc", "CreatedAtUtc");
-
+            b.HasIndex("PublishedAtUtc", "NextAttemptAtUtc", "CreatedAtUtc");
+            b.HasIndex("TenantId", "PublishedAtUtc", "NextAttemptAtUtc", "CreatedAtUtc");
             b.ToTable("OutboxMessages");
+        });
+
+        modelBuilder.Entity("PersonalWealth.Infrastructure.Persistence.ProcessedEvents.ProcessedEvent", b =>
+        {
+            b.Property<Guid>("EventId").ValueGeneratedNever().HasColumnType("uniqueidentifier");
+            b.Property<string>("EventType").IsRequired().HasMaxLength(512).HasColumnType("nvarchar(512)");
+            b.Property<DateTimeOffset>("ProcessedAtUtc").HasColumnType("datetimeoffset");
+            b.HasKey("EventId");
+            b.ToTable("ProcessedEvents");
         });
 #pragma warning restore 612, 618
     }
