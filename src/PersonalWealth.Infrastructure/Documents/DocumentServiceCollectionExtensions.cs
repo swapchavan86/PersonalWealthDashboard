@@ -1,6 +1,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PersonalWealth.Application.Documents;
+using PersonalWealth.Application.Documents.Business;
+using PersonalWealth.Application.Documents.Staging;
+using PersonalWealth.Infrastructure.Documents.Business;
+using PersonalWealth.Infrastructure.Documents.Staging;
 
 namespace PersonalWealth.Infrastructure.Documents;
 
@@ -17,6 +21,10 @@ public static class DocumentServiceCollectionExtensions
         services.AddSingleton<DocumentFolderProvider>();
         services.AddSingleton<IDocumentScanner, FileSystemDocumentScanner>();
         services.AddSingleton<IDocumentHasher, DocumentHasher>();
+        services.AddSingleton<IDocumentTemplateSelector, DocumentTemplateSelector>();
+        services.AddSingleton<ITransactionBusinessValidator, TransactionBusinessValidator>();
+        services.AddSingleton<IImportStagingStore, InMemoryImportStagingStore>();
+        services.AddSingleton<ImportLifecycleService>();
 
         return services;
     }

@@ -10,4 +10,4 @@ Validate normalized records against business/domain rules separately from docume
 - Invalid data cannot reach canonical financial persistence.
 
 ## Status
-Ready
+Implemented

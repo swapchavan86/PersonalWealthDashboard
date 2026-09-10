@@ -10,4 +10,4 @@ Create a versioned schema model for CSV/Excel/tabular financial documents.
 - Template definitions are testable.
 
 ## Status
-Ready
+Implemented

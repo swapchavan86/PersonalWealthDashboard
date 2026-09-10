@@ -11,4 +11,4 @@ Reject structurally invalid documents before business processing.
 - Parser and business rules remain separate.
 
 ## Status
-Ready
+Implemented

@@ -10,4 +10,4 @@ Stage validated records before canonical financial persistence.
 - Import status is auditable.
 
 ## Status
-Ready
+Implemented
