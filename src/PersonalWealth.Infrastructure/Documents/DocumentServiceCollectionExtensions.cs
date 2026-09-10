@@ -5,6 +5,7 @@ using PersonalWealth.Application.Documents;
 using PersonalWealth.Application.Documents.Business;
 using PersonalWealth.Application.Documents.Staging;
 using PersonalWealth.Application.Expenses;
+using PersonalWealth.Application.Investments;
 using PersonalWealth.Infrastructure.Banking;
 using PersonalWealth.Infrastructure.Documents.Business;
 using PersonalWealth.Infrastructure.Documents.Staging;
@@ -41,6 +42,8 @@ public static class DocumentServiceCollectionExtensions
         services.AddScoped<IRecurringExpenseRepository, EfRecurringExpenseRepository>();
         services.AddScoped<IExpenseReportingRepository, EfExpenseReportingRepository>();
         services.AddScoped<IExpenseService, ExpenseService>();
+        services.AddScoped<IInvestmentPortfolioEngine, InvestmentPortfolioEngine>();
+        services.AddScoped<IInvestmentValuationService, InvestmentValuationService>();
 
         return services;
     }
