@@ -41,6 +41,24 @@ jobs:
         run: |
           set -o pipefail
           dotnet build PersonalWealth.sln --no-restore --configuration Release 2>&1 | tee dotnet-build.log
+      - name: Generate EF snapshot candidate
+        shell: bash
+        run: |
+          dotnet tool install --global dotnet-ef --version 10.0.12
+          export PATH="$PATH:$HOME/.dotnet/tools"
+          dotnet ef migrations add SnapshotSyncCandidate \
+            --project src/PersonalWealth.Infrastructure/PersonalWealth.Infrastructure.csproj \
+            --startup-project src/PersonalWealth.Api/PersonalWealth.Api.csproj \
+            --context PersonalWealthDbContext
+          mkdir -p /tmp/ef-snapshot-candidate
+          cp src/PersonalWealth.Infrastructure/Persistence/Migrations/*SnapshotSyncCandidate* /tmp/ef-snapshot-candidate/
+          cp src/PersonalWealth.Infrastructure/Persistence/Migrations/PersonalWealthDbContextModelSnapshot.cs /tmp/ef-snapshot-candidate/
+      - name: Upload EF snapshot candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: ef-snapshot-candidate
+          path: /tmp/ef-snapshot-candidate/
+          if-no-files-found: error
       - name: Upload .NET build log
         if: always()
         uses: actions/upload-artifact@v4
