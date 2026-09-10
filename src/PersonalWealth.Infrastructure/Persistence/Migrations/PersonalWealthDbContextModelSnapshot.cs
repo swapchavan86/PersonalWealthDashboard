@@ -7,20 +7,61 @@ using PersonalWealth.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace PersonalWealth.Infrastructure.Persistence.Migrations
-{
-    [DbContext(typeof(PersonalWealthDbContext))]
-    partial class PersonalWealthDbContextModelSnapshot : ModelSnapshot
-    {
-        protected override void BuildModel(ModelBuilder modelBuilder)
-        {
-#pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.11")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+namespace PersonalWealth.Infrastructure.Persistence.Migrations;
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+[DbContext(typeof(PersonalWealthDbContext))]
+partial class PersonalWealthDbContextModelSnapshot : ModelSnapshot
+{
+    protected override void BuildModel(ModelBuilder modelBuilder)
+    {
+#pragma warning disable 612, 618
+        modelBuilder
+            .HasAnnotation("ProductVersion", "10.0.11")
+            .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+        SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+        modelBuilder.Entity("PersonalWealth.Infrastructure.Persistence.Outbox.OutboxMessage", b =>
+        {
+            b.Property<Guid>("EventId")
+                .ValueGeneratedNever()
+                .HasColumnType("uniqueidentifier");
+
+            b.Property<DateTimeOffset>("CreatedAtUtc")
+                .HasColumnType("datetimeoffset");
+
+            b.Property<string>("EventType")
+                .IsRequired()
+                .HasMaxLength(512)
+                .HasColumnType("nvarchar(512)");
+
+            b.Property<DateTimeOffset>("OccurredAtUtc")
+                .HasColumnType("datetimeoffset");
+
+            b.Property<DateTimeOffset?>("PublishedAtUtc")
+                .HasColumnType("datetimeoffset");
+
+            b.Property<string>("Payload")
+                .IsRequired()
+                .HasColumnType("nvarchar(max)");
+
+            b.Property<byte[]>("RowVersion")
+                .IsRowVersion()
+                .IsConcurrencyToken()
+                .ValueGeneratedOnAddOrUpdate()
+                .HasColumnType("rowversion");
+
+            b.Property<Guid?>("TenantId")
+                .HasColumnType("uniqueidentifier");
+
+            b.HasKey("EventId");
+
+            b.HasIndex("PublishedAtUtc", "CreatedAtUtc");
+
+            b.HasIndex("TenantId", "PublishedAtUtc", "CreatedAtUtc");
+
+            b.ToTable("OutboxMessages");
+        });
 #pragma warning restore 612, 618
-        }
     }
 }
