@@ -21,7 +21,7 @@ public sealed class TransactionalOutboxTests
             await context.Database.EnsureCreatedAsync();
 
             context.TenantEntities.Add(new TestTenantEntity(Guid.NewGuid(), tenantId));
-            new EfCoreOutbox(context).Add(new TestEvent(eventId, DateTimeOffset.UtcNow), tenantId);
+            new EfCoreOutbox(context).Add(new TestEvent(eventId, DateTimeOffset.UtcNow));
 
             await context.SaveChangesAsync();
         }
@@ -47,14 +47,14 @@ public sealed class TransactionalOutboxTests
         await using (var context = CreateContext(database.ConnectionString, tenantId))
         {
             await context.Database.EnsureCreatedAsync();
-            new EfCoreOutbox(context).Add(new TestEvent(eventId, DateTimeOffset.UtcNow), tenantId);
+            new EfCoreOutbox(context).Add(new TestEvent(eventId, DateTimeOffset.UtcNow));
             await context.SaveChangesAsync();
         }
 
         await using (var context = CreateContext(database.ConnectionString, tenantId))
         {
             context.TenantEntities.Add(new TestTenantEntity(Guid.NewGuid(), tenantId));
-            new EfCoreOutbox(context).Add(new TestEvent(eventId, DateTimeOffset.UtcNow), tenantId);
+            new EfCoreOutbox(context).Add(new TestEvent(eventId, DateTimeOffset.UtcNow));
 
             await Assert.ThrowsAsync<DbUpdateException>(() => context.SaveChangesAsync());
         }
