@@ -9,4 +9,4 @@ Separate document parsing from financial business logic.
 - Template selection is explicit and testable.
 
 ## Status
-Ready
+Implemented
