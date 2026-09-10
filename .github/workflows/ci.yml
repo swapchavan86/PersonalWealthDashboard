@@ -45,11 +45,12 @@ jobs:
         shell: bash
         run: |
           dotnet tool install --global dotnet-ef --version 10.0.12
-          export PATH="$PATH:$HOME/.dotnet/tools"
-          dotnet ef migrations add SnapshotSyncCandidate \
+          export PATH="$HOME/.dotnet/tools:$PATH"
+          dotnet-ef migrations add SnapshotSyncCandidate \
             --project src/PersonalWealth.Infrastructure/PersonalWealth.Infrastructure.csproj \
             --startup-project src/PersonalWealth.Api/PersonalWealth.Api.csproj \
-            --context PersonalWealthDbContext
+            --context PersonalWealthDbContext \
+            --verbose
           mkdir -p /tmp/ef-snapshot-candidate
           cp src/PersonalWealth.Infrastructure/Persistence/Migrations/*SnapshotSyncCandidate* /tmp/ef-snapshot-candidate/
           cp src/PersonalWealth.Infrastructure/Persistence/Migrations/PersonalWealthDbContextModelSnapshot.cs /tmp/ef-snapshot-candidate/
