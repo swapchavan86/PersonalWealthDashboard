@@ -1,5 +1,6 @@
 using PersonalWealth.Application.Investments;
 using PersonalWealth.Domain.Investments;
+using Xunit;
 
 namespace PersonalWealth.UnitTests.Investments;
 
@@ -68,7 +69,7 @@ public sealed class InvestmentPortfolioTests
         Assert.Equal(1010m, valuation.TotalCostBasis);
         Assert.Equal(1250m, valuation.TotalMarketValue);
         Assert.Equal(240m, valuation.TotalUnrealizedGainLoss);
-        Assert.Equal(1, valuation.Positions.Count);
+        Assert.Single(valuation.Positions);
         Assert.Equal(125m, valuation.Positions.Single().MarketPrice);
     }
 
