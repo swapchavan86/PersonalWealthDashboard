@@ -43,6 +43,8 @@ jobs:
           dotnet build PersonalWealth.sln --no-restore --configuration Release 2>&1 | tee dotnet-build.log
       - name: Generate EF snapshot candidate
         shell: bash
+        env:
+          ConnectionStrings__Default: "Server=localhost,1433;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;Encrypt=False;"
         run: |
           dotnet tool install --global dotnet-ef --version 10.0.12
           export PATH="$HOME/.dotnet/tools:$PATH"
@@ -94,6 +96,6 @@ jobs:
         with:
           node-version: '22.x'
       - name: Install dependencies
-        run: npm install
+        run: npm install --no-audit --no-fund
       - name: Build
         run: npm run build
