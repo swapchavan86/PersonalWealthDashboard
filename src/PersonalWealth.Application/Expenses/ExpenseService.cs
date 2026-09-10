@@ -13,7 +13,6 @@ public sealed class ExpenseService(
         {
             if (request.TenantId == Guid.Empty)
                 return Result<ExpenseCategoryModel>.Failure(ApplicationError.Validation("TenantId must not be empty."));
-
             if (request.Id == Guid.Empty)
                 return Result<ExpenseCategoryModel>.Failure(ApplicationError.Validation("Category Id must not be empty."));
 
@@ -71,10 +70,6 @@ public sealed class ExpenseService(
         {
             return Result<ExpenseModel>.Failure(ApplicationError.Validation(ex.Message));
         }
-        catch (ArgumentOutOfRangeException ex)
-        {
-            return Result<ExpenseModel>.Failure(ApplicationError.Validation(ex.Message));
-        }
     }
 
     public async Task<Result<ExpenseModel>> UpdateExpenseAsync(UpdateExpenseRequest request, CancellationToken cancellationToken = default)
@@ -102,10 +97,6 @@ public sealed class ExpenseService(
         {
             return Result<ExpenseModel>.Failure(ApplicationError.Validation(ex.Message));
         }
-        catch (ArgumentOutOfRangeException ex)
-        {
-            return Result<ExpenseModel>.Failure(ApplicationError.Validation(ex.Message));
-        }
     }
 
     public async Task<Result<ExpenseModel>> GetExpenseAsync(Guid tenantId, Guid expenseId, CancellationToken cancellationToken = default)
@@ -123,7 +114,6 @@ public sealed class ExpenseService(
     {
         if (tenantId == Guid.Empty)
             return Result<IReadOnlyCollection<ExpenseModel>>.Failure(ApplicationError.Validation("TenantId must not be empty."));
-
         if (from.HasValue && to.HasValue && from.Value.Date > to.Value.Date)
             return Result<IReadOnlyCollection<ExpenseModel>>.Failure(ApplicationError.Validation("From date must not be after To date."));
 
