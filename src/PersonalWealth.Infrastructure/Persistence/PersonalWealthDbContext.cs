@@ -3,6 +3,7 @@ using PersonalWealth.Application.Tenancy;
 using PersonalWealth.Domain.Banking;
 using PersonalWealth.Domain.Entities;
 using PersonalWealth.Domain.Expenses;
+using PersonalWealth.Domain.Investments;
 using PersonalWealth.Infrastructure.Persistence.Outbox;
 using PersonalWealth.Infrastructure.Persistence.ProcessedEvents;
 
@@ -26,6 +27,10 @@ public class PersonalWealthDbContext(
     public DbSet<ExpenseCategory> ExpenseCategories => Set<ExpenseCategory>();
     public DbSet<Expense> Expenses => Set<Expense>();
     public DbSet<RecurringExpense> RecurringExpenses => Set<RecurringExpense>();
+    public DbSet<InvestmentAccount> InvestmentAccounts => Set<InvestmentAccount>();
+    public DbSet<Security> Securities => Set<Security>();
+    public DbSet<InvestmentHolding> InvestmentHoldings => Set<InvestmentHolding>();
+    public DbSet<InvestmentTransaction> InvestmentTransactions => Set<InvestmentTransaction>();
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) => PersistenceModelConventions.Configure(configurationBuilder);
 
