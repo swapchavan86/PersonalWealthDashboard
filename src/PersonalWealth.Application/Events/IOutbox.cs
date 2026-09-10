@@ -4,5 +4,5 @@ namespace PersonalWealth.Application.Events;
 
 public interface IOutbox
 {
-    void Add(IDomainEvent domainEvent, Guid? tenantId = null);
+    void Add(IDomainEvent domainEvent);
 }
