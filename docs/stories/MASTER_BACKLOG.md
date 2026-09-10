@@ -1,6 +1,6 @@
 # Personal Wealth Platform — Master Story Backlog
 
-This backlog is the implementation contract for Codex. Stories are executed in order unless an ADR explicitly changes the dependency. One story normally maps to one feature branch and PR.
+This backlog is the implementation contract for Codex. Stories are executed in order unless an ADR explicitly changes the dependency. A feature branch/PR may contain a logical batch of sequential stories when the batch produces a complete, testable checkpoint.
 
 ## Phase 0 — Engineering Foundation
 - PW-CORE-001 Create solution structure [implemented]
@@ -52,12 +52,12 @@ This backlog is the implementation contract for Codex. Stories are executed in o
 - PW-BANK-008 Add banking integration tests and invariants
 
 ## Phase 5 — Expenses
-- PW-EXP-001 Create expense/category domain model
-- PW-EXP-002 Implement expense application use cases
-- PW-EXP-003 Implement recurring expense rules
-- PW-EXP-004 Implement expense aggregation/reporting queries
-- PW-EXP-005 Link bank transactions to expenses/categories
-- PW-EXP-006 Add expense tests
+- PW-EXP-001 Create expense/category domain model [implemented]
+- PW-EXP-002 Implement expense application use cases [implemented]
+- PW-EXP-003 Implement recurring expense rules [implemented]
+- PW-EXP-004 Implement expense aggregation/reporting queries [implemented]
+- PW-EXP-005 Link bank transactions to expenses/categories [implemented]
+- PW-EXP-006 Add expense tests [implemented]
 
 ## Phase 6 — Investments
 - PW-INV-001 Create investment account/portfolio model
