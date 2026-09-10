@@ -1,77 +1,37 @@
 # Story Implementation Status
 
-This document is the quick-reference status map for the implementation backlog. `MASTER_BACKLOG.md` is the ordered backlog. Phase directories under `docs/stories/` contain the canonical per-story specifications where available.
+This document is the quick-reference status map. `MASTER_BACKLOG.md` is the ordered backlog and phase documents under `docs/stories/` contain the detailed story contract.
 
-## Completed phases
+## Complete through Phase 12
 
-### Phase 0 — Engineering Foundation
-PW-CORE-001 through PW-CORE-007 are completed.
+- Phases 0–5: complete before this checkpoint.
+- Phase 6 — Investments: `PW-INV-001..010` complete. Includes accounting, valuation, corporate actions, import validation, reconciliation and persistence tests.
+- Phase 7 — Assets: `PW-ASSET-001..005` complete. Includes asset identity, valuation history, deterministic latest-value selection and tests.
+- Phase 8 — Liabilities: `PW-LIAB-001..007` complete. Includes loan model, repayment split, monthly interest/principal schedule, credit-card/EPF/NPS classification and tests.
+- Phase 9 — Wealth Engine: `PW-WEALTH-001..008` complete. Includes net worth, growth, allocation, concentration, cash flow, savings, debt and liquidity metrics plus deterministic tests.
+- Phase 10 — API: `PW-API-001..006` complete. Includes `/api/v1`, Problem Details boundary, JWT boundary, banking/wealth/import endpoints.
+- Phase 11 — Identity/Tenancy: `PW-AUTH-001..006` complete. Includes tenant/user models, claim/header tenant resolution, authorization boundary and persistence enforcement.
+- Phase 12 — Angular: `PW-UI-001..008` complete. Includes standalone shell, typed API client, routed financial screens and wealth dashboard.
 
-### Phase 1 — Database Foundation
-PW-DB-001 through PW-DB-006 are completed.
+## Artifacts
 
-### Phase 2 — Events and Reliability
-PW-EVENT-001 through PW-EVENT-006 are completed.
+- Domain: `src/PersonalWealth.Domain/{Investments,Assets,Liabilities,Identity}`
+- Application: `src/PersonalWealth.Application/{Investments,Assets,Liabilities,Wealth,Tenancy}`
+- Infrastructure: persistence configurations, migrations, tenant context and wealth query
+- API: versioned controllers and exception/authentication boundary
+- UI: `web/PersonalWealth.Web`
+- Tests: Phase 6–9 unit coverage and tenant-scoped persistence smoke coverage
+- Detailed stories: `docs/stories/INV`, `ASSET`, `LIAB`, `WEALTH`, `API`, `AUTH`, `UI`
 
-### Phase 3 — Documents and Deterministic Import
-PW-DOC-001 through PW-DOC-012 are completed.
+## Validation limitation
 
-### Phase 4 — Banking
-PW-BANK-001 through PW-BANK-008 are completed.
+No local `dotnet build`, `dotnet test`, `npm test` or `npm build` execution was available through the GitHub integration environment. The branch therefore does not claim a green build. CI/local validation is required before merge. The PR is intentionally not merged.
 
-### Phase 5 — Expenses
-PW-EXP-001 through PW-EXP-006 are implemented. The Expense phase includes category/expense domain models, application workflows, recurring rules, reporting projections, bank-transaction linking and tests.
+## Remaining roadmap
 
-Expense story specifications are maintained under `docs/stories/EXP/`.
+Phase 13: Alerts/Notifications (5 stories)
+Phase 14: AI Interpretation (8 stories)
+Phase 15: Admin/Operations (4 stories)
+Phase 16: Deployment/Production Hardening (8 stories)
 
-## Phase 6 — Investments
-
-### Implemented
-
-- `PW-INV-001` — Investment account/portfolio boundary and tenant-aware persistence model.
-- `PW-INV-002` — Security/instrument master with symbol, classification, currency and optional ISIN.
-- `PW-INV-003` — Investment transaction and holding model with financial precision and invariants.
-- `PW-INV-004` — Deterministic portfolio replay using transaction-date/identity ordering, weighted-average cost, realized gain/loss, dividend income and explicit fees.
-- `PW-INV-005` — Application-owned market-price provider abstraction. No external provider SDK is coupled to the core.
-- `PW-INV-006` — Deterministic portfolio valuation and unrealized gain/loss from supplied market-price snapshots.
-
-Implementation artifacts include:
-
-- Domain investment entities under `src/PersonalWealth.Domain/Investments/`.
-- Application portfolio and valuation engines under `src/PersonalWealth.Application/Investments/`.
-- EF Core mappings under `src/PersonalWealth.Infrastructure/Persistence/Configurations/InvestmentConfigurations.cs`.
-- Investment DbSets registered in `PersonalWealthDbContext`.
-- Source-controlled investment migration `20260910170000_Investments`.
-- Unit coverage under `tests/PersonalWealth.UnitTests/Investments/InvestmentPortfolioTests.cs`.
-- Accounting methodology recorded in `docs/adr/ADR-INV-001-Investment-Accounting-Methodology.md`.
-
-### Pending
-
-- `PW-INV-007` — Corporate-action handling foundation.
-- `PW-INV-008` — Investment import templates.
-- `PW-INV-009` — Investment reconciliation.
-- `PW-INV-010` — Investment integration tests.
-
-The remaining Investment stories are intentionally not implemented prematurely. Corporate actions, import contracts and reconciliation rules require their own explicit boundaries and test fixtures.
-
-## Current validation note
-
-The latest GitHub commit sequence implements the Investment milestone directly on `main`, but GitHub Actions does not currently provide a workflow result for the latest merge state. Therefore this document does not claim a green CI run. Local validation should run `dotnet build` followed by `dotnet test` against the current `main` state before treating the milestone as release-ready.
-
-The previous Expense follow-up corrected `Recurring_expense_respects_end_date_and_inactive_state` by changing the fixture end date to `2026-01-31`, matching the implementation's inclusive end-date semantics.
-
-## Remaining implementation order
-
-1. Finish Phase 6 — Investments: PW-INV-007 through PW-INV-010.
-2. Phase 7 — Assets: PW-ASSET-001 through PW-ASSET-005.
-3. Phase 8 — Liabilities: PW-LIAB-001 through PW-LIAB-007.
-4. Phase 9 — Wealth Engine: PW-WEALTH-001 through PW-WEALTH-008.
-5. Phase 10 — API Foundation: PW-API-001 through PW-API-006, including the versioned API surface needed for Swagger/Postman testing.
-6. Phase 11 — Identity and Tenancy: PW-AUTH-001 through PW-AUTH-006.
-7. Phase 12 — Angular Application: PW-UI-001 through PW-UI-008.
-8. Phase 13 — Alerts and Notifications: PW-ALERT-001 through PW-ALERT-005.
-9. Phase 14 — AI Interpretation: PW-AI-001 through PW-AI-008.
-10. Phase 15 — Admin and Operations: PW-ADMIN-001 through PW-ADMIN-004.
-11. Phase 16 — Deployment and Production Hardening: PW-OPS-001 through PW-OPS-008.
-
-Stories should continue in backlog order unless an ADR explicitly changes the dependency. Sequential stories may be batched into one branch/PR when they form a complete, testable checkpoint.
+Total completed through this branch: 95 of 120 stories. Remaining: 25.
