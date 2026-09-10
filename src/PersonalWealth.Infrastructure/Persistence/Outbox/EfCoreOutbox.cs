@@ -6,14 +6,14 @@ namespace PersonalWealth.Infrastructure.Persistence.Outbox;
 
 public sealed class EfCoreOutbox(PersonalWealthDbContext dbContext) : IOutbox
 {
-    public void Add(IDomainEvent domainEvent, Guid? tenantId = null)
+    public void Add(IDomainEvent domainEvent)
     {
         ArgumentNullException.ThrowIfNull(domainEvent);
 
         var payload = JsonSerializer.Serialize(domainEvent, domainEvent.GetType());
         var message = OutboxMessage.Create(
             domainEvent.EventId,
-            tenantId,
+            dbContext.CurrentTenantId,
             domainEvent.GetType().AssemblyQualifiedName
                 ?? throw new InvalidOperationException("Domain event type must have an assembly-qualified name."),
             payload,
