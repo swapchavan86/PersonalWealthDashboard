@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication;
 using PersonalWealth.Api.Infrastructure;
 using PersonalWealth.Application.Tenancy;
 using PersonalWealth.Application.Wealth;
@@ -8,6 +9,6 @@ using PersonalWealth.Infrastructure.Tenancy;
 using PersonalWealth.Infrastructure.Wealth;
 var builder=WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor(); builder.Services.AddControllers(); builder.Services.AddProblemDetails(); builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options=>{options.Authority=builder.Configuration["Authentication:Authority"]??throw new InvalidOperationException("Authentication:Authority is required.");options.Audience=builder.Configuration["Authentication:Audience"]??throw new InvalidOperationException("Authentication:Audience is required.");});
+if(builder.Environment.IsDevelopment()) builder.Services.AddAuthentication("Development").AddScheme<AuthenticationSchemeOptions,DevelopmentAuthenticationHandler>("Development",_=>{}); else builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options=>{options.Authority=builder.Configuration["Authentication:Authority"]??throw new InvalidOperationException("Authentication:Authority is required.");options.Audience=builder.Configuration["Authentication:Audience"]??throw new InvalidOperationException("Authentication:Audience is required.");});
 builder.Services.AddAuthorization(); builder.Services.AddPersistence(builder.Configuration); builder.Services.AddDocumentServices(builder.Configuration); builder.Services.AddScoped<ITenantContext,HttpTenantContext>(); builder.Services.AddScoped<IWealthDashboardQuery,EfWealthDashboardQuery>();
 var app=builder.Build(); app.UseExceptionHandler(); app.UseHttpsRedirection(); app.UseAuthentication(); app.UseAuthorization(); app.MapControllers(); app.Run(); public partial class Program;
