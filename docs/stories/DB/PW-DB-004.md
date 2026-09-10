@@ -10,4 +10,4 @@ Standardize audit metadata and optimistic concurrency where appropriate.
 - No sensitive values are written to logs/audit fields accidentally.
 
 ## Status
-Ready
+Implemented on feature/pw-db-004-audit-concurrency; local validation pending.
