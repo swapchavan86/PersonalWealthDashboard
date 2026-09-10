@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersonalWealth.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using PersonalWealth.Infrastructure.Persistence;
 namespace PersonalWealth.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(PersonalWealthDbContext))]
-    partial class PersonalWealthDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260910152135_SnapshotSyncCandidate")]
+    partial class SnapshotSyncCandidate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
