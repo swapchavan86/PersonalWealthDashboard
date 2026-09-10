@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using PersonalWealth.Application.Events;
+using PersonalWealth.Infrastructure.Persistence.Outbox;
 
 namespace PersonalWealth.Infrastructure.Persistence;
 
@@ -31,6 +33,8 @@ public static class PersistenceServiceCollectionExtensions
 
             options.UseSqlServer(persistenceOptions.ConnectionString);
         });
+
+        services.AddScoped<IOutbox, EfCoreOutbox>();
 
         return services;
     }

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersonalWealth.Infrastructure.Persistence;
 
@@ -10,9 +11,10 @@ using PersonalWealth.Infrastructure.Persistence;
 namespace PersonalWealth.Infrastructure.Persistence.Migrations;
 
 [DbContext(typeof(PersonalWealthDbContext))]
-partial class PersonalWealthDbContextModelSnapshot : ModelSnapshot
+[Migration("20260910070000_TransactionalOutbox")]
+partial class TransactionalOutbox
 {
-    protected override void BuildModel(ModelBuilder modelBuilder)
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
 #pragma warning disable 612, 618
         modelBuilder
@@ -38,12 +40,12 @@ partial class PersonalWealthDbContextModelSnapshot : ModelSnapshot
             b.Property<DateTimeOffset>("OccurredAtUtc")
                 .HasColumnType("datetimeoffset");
 
-            b.Property<DateTimeOffset?>("PublishedAtUtc")
-                .HasColumnType("datetimeoffset");
-
             b.Property<string>("Payload")
                 .IsRequired()
                 .HasColumnType("nvarchar(max)");
+
+            b.Property<DateTimeOffset?>("PublishedAtUtc")
+                .HasColumnType("datetimeoffset");
 
             b.Property<byte[]>("RowVersion")
                 .IsRowVersion()
