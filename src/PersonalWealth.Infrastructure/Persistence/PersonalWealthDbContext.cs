@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PersonalWealth.Application.Tenancy;
 using PersonalWealth.Domain.Entities;
+using PersonalWealth.Infrastructure.Persistence.Outbox;
 
 namespace PersonalWealth.Infrastructure.Persistence;
 
@@ -13,6 +14,8 @@ public class PersonalWealthDbContext(
         ?? throw new ArgumentNullException(nameof(tenantContext));
 
     internal Guid CurrentTenantId => tenantContext.TenantId;
+
+    public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
