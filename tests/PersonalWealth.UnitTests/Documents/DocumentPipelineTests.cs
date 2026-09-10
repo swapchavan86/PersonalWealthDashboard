@@ -6,6 +6,7 @@ using PersonalWealth.Application.Documents.Validation;
 using PersonalWealth.Infrastructure.Documents;
 using PersonalWealth.Infrastructure.Documents.Business;
 using PersonalWealth.Infrastructure.Documents.Staging;
+using Xunit;
 
 namespace PersonalWealth.UnitTests.Documents;
 
