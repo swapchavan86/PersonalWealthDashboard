@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using PersonalWealth.Domain.Entities;
 
 namespace PersonalWealth.Infrastructure.Persistence;
 
@@ -15,16 +16,30 @@ public static class PersistenceModelConventions
     {
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {
-            if (entityType.FindPrimaryKey() is not null)
+            if (entityType.FindPrimaryKey() is null)
+            {
+                var idProperty = entityType.FindProperty("Id");
+                if (idProperty is not null)
+                {
+                    entityType.SetPrimaryKey(idProperty);
+                }
+            }
+
+            if (!typeof(IConcurrencyTracked).IsAssignableFrom(entityType.ClrType))
             {
                 continue;
             }
 
-            var idProperty = entityType.FindProperty("Id");
-            if (idProperty is not null)
+            var rowVersionProperty = entityType.FindProperty(nameof(IConcurrencyTracked.RowVersion));
+            if (rowVersionProperty is null || rowVersionProperty.ClrType != typeof(byte[]))
             {
-                entityType.SetPrimaryKey(idProperty);
+                throw new InvalidOperationException(
+                    $"Concurrency-tracked entity '{entityType.ClrType.Name}' must define a byte[] RowVersion property.");
             }
+
+            modelBuilder.Entity(entityType.ClrType)
+                .Property(nameof(IConcurrencyTracked.RowVersion))
+                .IsRowVersion();
         }
     }
 }
