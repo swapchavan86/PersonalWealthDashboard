@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   dotnet:
@@ -44,51 +44,18 @@ jobs:
         run: |
           set -o pipefail
           dotnet build PersonalWealth.sln --no-restore --configuration Release 2>&1 | tee dotnet-build.log
-      - name: Generate and commit EF snapshot sync
-        shell: bash
+      - name: Install EF CLI
+        run: |
+          dotnet tool install --global dotnet-ef --version 10.0.12
+          echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
+      - name: Check EF model has no pending changes
         env:
           ConnectionStrings__Default: "Server=localhost,1433;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True;Encrypt=False;"
         run: |
-          set -euo pipefail
-          dotnet tool install --global dotnet-ef --version 10.0.12
-          export PATH="$HOME/.dotnet/tools:$PATH"
-          rm -rf /tmp/ef-snapshot-candidate
-          mkdir -p /tmp/ef-snapshot-candidate
-          dotnet-ef migrations add SnapshotSyncCandidate \
+          dotnet-ef migrations has-pending-model-changes \
             --project src/PersonalWealth.Infrastructure/PersonalWealth.Infrastructure.csproj \
             --startup-project src/PersonalWealth.Api/PersonalWealth.Api.csproj \
             --context PersonalWealthDbContext
-          cp src/PersonalWealth.Infrastructure/Persistence/Migrations/*SnapshotSyncCandidate.cs /tmp/ef-snapshot-candidate/migration.cs
-          cp src/PersonalWealth.Infrastructure/Persistence/Migrations/*SnapshotSyncCandidate.Designer.cs /tmp/ef-snapshot-candidate/designer.cs
-          cp src/PersonalWealth.Infrastructure/Persistence/Migrations/PersonalWealthDbContextModelSnapshot.cs /tmp/ef-snapshot-candidate/PersonalWealthDbContextModelSnapshot.cs
-
-          python3 - <<'PY'
-          from pathlib import Path
-          p = Path('/tmp/ef-snapshot-candidate/migration.cs')
-          text = p.read_text(encoding='utf-8-sig')
-          up = text.index('        protected override void Up(MigrationBuilder migrationBuilder)')
-          down = text.index('        protected override void Down(MigrationBuilder migrationBuilder)')
-          end = text.rindex('\n    }\n}')
-          text = text[:up] + '''        protected override void Up(MigrationBuilder migrationBuilder)\n        {\n        }\n\n        /// <inheritdoc />\n        protected override void Down(MigrationBuilder migrationBuilder)\n        {\n        }\n''' + text[end:]
-          p.write_text(text, encoding='utf-8')
-          PY
-
-          git fetch origin "$GITHUB_HEAD_REF"
-          git checkout -B "$GITHUB_HEAD_REF" "origin/$GITHUB_HEAD_REF"
-
-          migration_id=$(basename /tmp/ef-snapshot-candidate/migration.cs .cs)
-          designer_id="${migration_id}.Designer.cs"
-          cp /tmp/ef-snapshot-candidate/migration.cs "src/PersonalWealth.Infrastructure/Persistence/Migrations/${migration_id}.cs"
-          cp /tmp/ef-snapshot-candidate/designer.cs "src/PersonalWealth.Infrastructure/Persistence/Migrations/${designer_id}"
-          cp /tmp/ef-snapshot-candidate/PersonalWealthDbContextModelSnapshot.cs src/PersonalWealth.Infrastructure/Persistence/Migrations/PersonalWealthDbContextModelSnapshot.cs
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/PersonalWealth.Infrastructure/Persistence/Migrations
-          if ! git diff --cached --quiet; then
-            git commit -m "Sync EF migration model snapshot"
-            git push origin "HEAD:$GITHUB_HEAD_REF"
-          fi
       - name: Validate EF migrations against SQL Server
         shell: bash
         env:
