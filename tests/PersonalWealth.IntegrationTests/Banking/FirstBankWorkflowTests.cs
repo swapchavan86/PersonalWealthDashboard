@@ -32,7 +32,7 @@ public sealed class FirstBankWorkflowTests
         var workflow = new FirstBankImportWorkflow(
             new DocumentTemplateSelector(),
             new SampleBankCsvParser(),
-            new TransactionBusinessValidator(),
+            new Infrastructure.Documents.Business.TransactionBusinessValidator(),
             new EfBankImportService(context, new TransactionNormalizer(), new RuleBasedTransactionCategorizer(), new StatementReconciler(), new EfCoreOutbox(context)));
 
         var result = await workflow.ImportAsync(new FirstBankWorkflowRequest(tenantId, accountId, Guid.NewGuid(), "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", ".csv", csv, 0m, 45000m));
