@@ -15,6 +15,7 @@ public sealed class RecurringExpense : TenantEntity<Guid>
     private RecurringExpense()
         : base(Guid.NewGuid(), Guid.NewGuid())
     {
+        Description = string.Empty;
     }
 
     public RecurringExpense(
