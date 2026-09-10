@@ -18,7 +18,7 @@ public partial class IdentityTenancy : Migration
                 CreatedAt = t.Column<DateTime>(type: "datetime2", nullable: false),
                 UpdatedAt = t.Column<DateTime>(type: "datetime2", nullable: true)
             },
-            c => c.PrimaryKey("PK_Tenants", x => x.Id));
+            c => c.PrimaryKey("PK_Tenants", new[] { "Id" }));
 
         m.CreateTable(
             "UserIdentities",
@@ -34,7 +34,7 @@ public partial class IdentityTenancy : Migration
             },
             c =>
             {
-                c.PrimaryKey("PK_UserIdentities", x => x.Id);
+                c.PrimaryKey("PK_UserIdentities", new[] { "Id" });
                 c.ForeignKey("FK_UserIdentities_Tenants_TenantId", x => x.TenantId, "Tenants", "Id", onDelete: ReferentialAction.Cascade);
             });
 
