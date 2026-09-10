@@ -74,7 +74,7 @@ public sealed class ExpensePhaseTests
     private sealed class RecurringRepository(RecurringExpenseModel? item = null) : IRecurringExpenseRepository
     {
         public Task AddAsync(RecurringExpenseModel recurringExpense, CancellationToken cancellationToken = default) => Task.CompletedTask;
-        public Task<RecurringExpenseModel?> GetAsync(Guid tenantId, Guid recurringExpenseId, CancellationToken cancellationToken = default) => Task.FromResult(item?.TenantId == tenantId && item.Id == recurringExpenseId ? item : null);
+        public Task<RecurringExpenseModel?> GetAsync(Guid tenantId, Guid recurringExpenseId, CancellationToken cancellationToken = default) => Task.FromResult(item is not null && item.TenantId == tenantId && item.Id == recurringExpenseId ? item : null);
         public Task<IReadOnlyCollection<RecurringExpenseModel>> ListAsync(Guid tenantId, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyCollection<RecurringExpenseModel>>(Array.Empty<RecurringExpenseModel>());
     }
 
