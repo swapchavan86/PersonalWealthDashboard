@@ -60,12 +60,12 @@ This backlog is the implementation contract for Codex. Stories are executed in o
 - PW-EXP-006 Add expense tests [implemented]
 
 ## Phase 6 — Investments
-- PW-INV-001 Create investment account/portfolio model
-- PW-INV-002 Create security/instrument master model
-- PW-INV-003 Create holdings and transaction model
-- PW-INV-004 Implement investment business rules
-- PW-INV-005 Implement market-price provider abstraction
-- PW-INV-006 Implement valuation and gain/loss calculations
+- PW-INV-001 Create investment account/portfolio model [implemented]
+- PW-INV-002 Create security/instrument master model [implemented]
+- PW-INV-003 Create holdings and transaction model [implemented]
+- PW-INV-004 Implement investment business rules [implemented]
+- PW-INV-005 Implement market-price provider abstraction [implemented]
+- PW-INV-006 Implement valuation and gain/loss calculations [implemented]
 - PW-INV-007 Implement corporate-action handling foundation
 - PW-INV-008 Implement investment import templates
 - PW-INV-009 Implement investment reconciliation
