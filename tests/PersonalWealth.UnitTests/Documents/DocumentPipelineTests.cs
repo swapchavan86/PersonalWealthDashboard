@@ -63,4 +63,18 @@ public sealed class DocumentPipelineTests
         Assert.Equal(ImportStatus.Staged, record.Status);
         Assert.Equal(3, record.StagedRowCount);
     }
+
+    [Fact]
+    public async Task Import_lifecycle_allows_validation_and_commit_but_rejects_invalid_transition()
+    {
+        var store = new InMemoryImportStagingStore();
+        var lifecycle = new ImportLifecycleService(store);
+        var record = await lifecycle.StageAsync(Guid.NewGuid(), 2);
+        var validated = await lifecycle.TransitionAsync(record, ImportStatus.Validated, DateTimeOffset.UtcNow);
+        var committed = await lifecycle.TransitionAsync(validated, ImportStatus.Committed, DateTimeOffset.UtcNow);
+
+        Assert.Equal(ImportStatus.Committed, committed.Status);
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            lifecycle.TransitionAsync(committed, ImportStatus.Failed, DateTimeOffset.UtcNow));
+    }
 }
