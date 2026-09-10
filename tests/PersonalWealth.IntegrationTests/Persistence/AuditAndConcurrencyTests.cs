@@ -32,7 +32,7 @@ public sealed class AuditAndConcurrencyTests
             .Options;
 
         using var context = new AuditTestDbContext(options);
-        var entity = new TestPersistenceEntity(Guid.NewGuid());
+        var entity = new TestPersistenceEntity();
         var expected = new DateTime(2026, 9, 10, 4, 30, 0, DateTimeKind.Utc);
 
         context.Add(entity);
@@ -51,7 +51,7 @@ public sealed class AuditAndConcurrencyTests
             .Options;
 
         using var context = new AuditTestDbContext(options);
-        var entity = new TestPersistenceEntity(Guid.NewGuid());
+        var entity = new TestPersistenceEntity();
         var created = new DateTime(2026, 9, 9, 4, 30, 0, DateTimeKind.Utc);
         var updated = new DateTime(2026, 9, 10, 4, 30, 0, DateTimeKind.Utc);
 
@@ -84,8 +84,8 @@ public sealed class AuditAndConcurrencyTests
 
     private sealed class TestPersistenceEntity : Entity<Guid>, IAuditableEntity, IConcurrencyTracked
     {
-        public TestPersistenceEntity(Guid id)
-            : base(id)
+        public TestPersistenceEntity()
+            : base(Guid.NewGuid())
         {
         }
 
