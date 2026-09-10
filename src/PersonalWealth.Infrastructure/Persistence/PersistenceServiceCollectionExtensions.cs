@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using PersonalWealth.Application.Events;
 using PersonalWealth.Infrastructure.Persistence.Outbox;
+using PersonalWealth.Infrastructure.Persistence.ProcessedEvents;
 
 namespace PersonalWealth.Infrastructure.Persistence;
 
@@ -35,6 +36,7 @@ public static class PersistenceServiceCollectionExtensions
         });
 
         services.AddScoped<IOutbox, EfCoreOutbox>();
+        services.AddScoped<IProcessedEventStore, EfCoreProcessedEventStore>();
 
         return services;
     }
