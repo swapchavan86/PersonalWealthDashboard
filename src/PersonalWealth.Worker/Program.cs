@@ -16,7 +16,9 @@ builder.Services.AddOptions<OutboxPublisherOptions>()
     .Bind(builder.Configuration.GetSection(OutboxPublisherOptions.SectionName));
 builder.Services.AddScoped<OutboxPublisher>();
 builder.Services.AddSingleton<EventHandlerRegistry>();
-builder.Services.AddSingleton<IEventBus>(sp => sp.GetRequiredService<EventHandlerRegistry>().CreateEventBus());
+builder.Services.AddScoped<IEventBus>(sp =>
+    sp.GetRequiredService<EventHandlerRegistry>()
+        .CreateEventBus(sp.GetRequiredService<IProcessedEventStore>()));
 builder.Services.AddHostedService<OutboxPublisherWorker>();
 
 IHost host = builder.Build();
