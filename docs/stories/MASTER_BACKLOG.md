@@ -27,7 +27,8 @@ Ordered implementation contract. Sequential stories may be batched in one featur
 ## Phase 13 — Alerts and Notifications
 - PW-ALERT-001..005 [implemented]
 ## Phase 14 — AI Interpretation
-- PW-AI-001..008 [pending]
+- PW-AI-001..002 [implemented]
+- PW-AI-003..008 [pending]
 ## Phase 15 — Admin and Operations
 - PW-ADMIN-001..004 [pending]
 ## Phase 16 — Deployment and Production Hardening
