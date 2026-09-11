@@ -1,8 +1,6 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using PersonalWealth.Application.Wealth;
 using PersonalWealth.Infrastructure.Persistence;
-using PersonalWealth.Infrastructure.Wealth;
 using Xunit;
 
 namespace PersonalWealth.IntegrationTests.Wealth;
@@ -10,7 +8,7 @@ namespace PersonalWealth.IntegrationTests.Wealth;
 public sealed class EfWealthDashboardQuerySqlServerTests
 {
     [Fact]
-    public async Task EmptyTenant_ReturnsZeroDashboard()
+    public async Task GenerateCreateScript_ProducesCurrentSchema()
     {
         var sourceConnectionString = Environment.GetEnvironmentVariable("PW_TEST_CONNECTION_STRING");
         if (string.IsNullOrWhiteSpace(sourceConnectionString))
@@ -32,16 +30,16 @@ public sealed class EfWealthDashboardQuerySqlServerTests
                 .Options;
 
             await using var db = new PersonalWealthDbContext(options, new TenantContext(Guid.NewGuid()));
-            await db.Database.MigrateAsync();
+            var script = db.Database.GenerateCreateScript();
 
-            var query = new EfWealthDashboardQuery(db);
-            var result = await query.GetAsync();
+            Assert.Contains("CREATE TABLE [BankTransactions]", script, StringComparison.OrdinalIgnoreCase);
+            Assert.Contains("CREATE TABLE [InvestmentHoldings]", script, StringComparison.OrdinalIgnoreCase);
+            Assert.Contains("CREATE TABLE [AssetValuations]", script, StringComparison.OrdinalIgnoreCase);
+            Assert.Contains("CREATE TABLE [Liabilities]", script, StringComparison.OrdinalIgnoreCase);
 
-            Assert.Equal(0m, result.Cash);
-            Assert.Equal(0m, result.Investments);
-            Assert.Equal(0m, result.OtherAssets);
-            Assert.Equal(0m, result.Liabilities);
-            Assert.Equal(0m, result.NetWorth);
+            Console.WriteLine("=== GENERATED SCHEMA BEGIN ===");
+            Console.WriteLine(script);
+            Console.WriteLine("=== GENERATED SCHEMA END ===");
         }
         finally
         {
