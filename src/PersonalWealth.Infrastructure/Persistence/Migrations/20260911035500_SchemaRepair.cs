@@ -1,11 +1,15 @@
 using System.IO.Compression;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
+using PersonalWealth.Infrastructure.Persistence;
 
 #nullable disable
 
 namespace PersonalWealth.Infrastructure.Persistence.Migrations;
 
+[DbContext(typeof(PersonalWealthDbContext))]
+[Migration("20260911035500_SchemaRepair")]
 public partial class SchemaRepair : Migration
 {
     protected override void Up(MigrationBuilder migrationBuilder)
