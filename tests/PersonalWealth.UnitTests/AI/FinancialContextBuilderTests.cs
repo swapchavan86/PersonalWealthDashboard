@@ -1,4 +1,5 @@
 using PersonalWealth.Application.AI;
+using Xunit;
 
 namespace PersonalWealth.UnitTests.AI;
 
