@@ -22,11 +22,16 @@ public sealed class InvestmentAiContextBuilder : IFinancialContextBuilder<IReadO
     public string Build(IReadOnlyList<InvestmentAiContext> input)
     {
         var ordered = input
-            .OrderBy(x => x.Symbol, StringComparer.OrdinalIgnoreCase)
+            .Select(x => new InvestmentAiContext(
+                x.Symbol.Trim().ToUpperInvariant(),
+                x.Quantity,
+                x.CostBasis,
+                x.CurrentValue))
+            .OrderBy(x => x.Symbol, StringComparer.Ordinal)
             .ThenBy(x => x.Quantity)
             .Select(x => new
             {
-                Symbol = x.Symbol.Trim().ToUpperInvariant(),
+                x.Symbol,
                 x.Quantity,
                 x.CostBasis,
                 x.CurrentValue
