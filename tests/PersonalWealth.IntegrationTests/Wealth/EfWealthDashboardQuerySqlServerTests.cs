@@ -22,6 +22,8 @@ public sealed class EfWealthDashboardQuerySqlServerTests
         {
             InitialCatalog = $"PersonalWealth_DashboardQuery_{Guid.NewGuid():N}"
         };
+        var databaseName = builder.InitialCatalog;
+        var escapedDatabaseName = databaseName.Replace("]", "]]", StringComparison.Ordinal);
 
         try
         {
@@ -51,7 +53,7 @@ public sealed class EfWealthDashboardQuerySqlServerTests
             await using var connection = new SqlConnection(masterBuilder.ConnectionString);
             await connection.OpenAsync();
             await using var command = connection.CreateCommand();
-            command.CommandText = $"IF DB_ID(N'{builder.InitialCatalog.Replace("'", "''")}') IS NOT NULL BEGIN ALTER DATABASE [{builder.InitialCatalog.Replace("]", "]]'")}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{builder.InitialCatalog.Replace("]", "]]'")}]; END";
+            command.CommandText = $"IF DB_ID(N'{databaseName.Replace("'", "''", StringComparison.Ordinal)}') IS NOT NULL BEGIN ALTER DATABASE [{escapedDatabaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{escapedDatabaseName}]; END";
             await command.ExecuteNonQueryAsync();
         }
     }
