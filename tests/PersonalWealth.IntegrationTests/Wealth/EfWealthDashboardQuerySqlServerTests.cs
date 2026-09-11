@@ -37,7 +37,7 @@ public sealed class EfWealthDashboardQuerySqlServerTests
             Assert.Contains("CREATE TABLE [AssetValuations]", script, StringComparison.OrdinalIgnoreCase);
             Assert.Contains("CREATE TABLE [Liabilities]", script, StringComparison.OrdinalIgnoreCase);
 
-            await File.WriteAllTextAsync("generated-schema.sql", script);
+            await File.WriteAllTextAsync(Path.Combine(AppContext.BaseDirectory, "generated-schema.sql"), script);
         }
         finally
         {
