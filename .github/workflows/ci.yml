@@ -94,7 +94,7 @@ jobs:
           name: dotnet-test-log
           path: |
             dotnet-test.log
-            generated-schema.sql
+            tests/PersonalWealth.IntegrationTests/bin/**/generated-schema.sql
           if-no-files-found: error
 
   angular:
