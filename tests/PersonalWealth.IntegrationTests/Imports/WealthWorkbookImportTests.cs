@@ -1,6 +1,5 @@
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using PersonalWealth.Application.Imports;
 using PersonalWealth.Infrastructure.Documents;
 using PersonalWealth.Infrastructure.Persistence;
 using PersonalWealth.IntegrationTests.Persistence;
@@ -27,7 +26,8 @@ public sealed class WealthWorkbookImportTests
                   "LIABILITY,liab-1,2024-01-01,,, ,INR,,,,,,,,,,,,,,Home Loan,Mortgage,2000000,8.5,2029-01-01,,,\n";
 
         await using var context = CreateContext(database, tenantId);
-        var service = new WealthWorkbookImportService(context, new TenantContext(tenantId));
+        var inner = new WealthWorkbookImportService(context, new TenantContext(tenantId));
+        var service = new IdempotentWealthWorkbookImportService(inner, context, new TenantContext(tenantId));
         await using var first = new MemoryStream(Encoding.UTF8.GetBytes(csv));
         var result = await service.ImportAsync(first, "PersonalWealth_Import_Template.csv");
 
