@@ -55,7 +55,8 @@ public static class DocumentServiceCollectionExtensions
         services.AddScoped<IAssetValuationService, AssetValuationService>();
         services.AddScoped<IAssetImportService, AssetImportService>();
         services.AddScoped<ILoanScheduleService, LoanScheduleService>();
-        services.AddScoped<IWealthWorkbookImportService, WealthWorkbookImportService>();
+        services.AddScoped<WealthWorkbookImportService>();
+        services.AddScoped<IWealthWorkbookImportService, IdempotentWealthWorkbookImportService>();
 
         return services;
     }
