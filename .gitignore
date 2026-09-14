@@ -10,6 +10,12 @@ TestResults/
 .idea/
 .vscode/
 
+## Angular / Node generated files
+node_modules/
+dist/
+.angular/
+coverage/
+
 ## Local configuration and secrets
 appsettings.Local.json
 appsettings.*.Local.json
