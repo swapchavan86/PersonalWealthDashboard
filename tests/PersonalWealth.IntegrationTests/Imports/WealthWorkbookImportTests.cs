@@ -17,14 +17,14 @@ public sealed class WealthWorkbookImportTests
         await database.ResetAsync();
         var tenantId = Guid.NewGuid();
         var csv = "RecordType,ExternalId,Date,Institution,AccountNumber,AccountType,Currency,Description,Direction,Amount,Category,SecuritySymbol,SecurityName,SecurityType,Quantity,UnitPrice,Fees,AssetName,AssetType,AcquisitionValue,LiabilityName,LiabilityType,Principal,InterestRate,MaturityDate,PrincipalAmount,InterestAmount,ValuationValue\n" +
-                  "BANK_ACCOUNT,bank-1,,HDFC,HDFC-001,Savings,INR,,,,,,,,,,,,,,,,,,,,,,\n" +
-                  "BANK_TRANSACTION,txn-1,2026-08-01,,HDFC-001,,INR,Salary,Credit,100000,,,,,,,,,,,,,,,,,,,\n" +
-                  "INVESTMENT_ACCOUNT,inv-1,,Zerodha,Z-001,Brokerage,INR,,,,,,,,,,,,,,,,,,,,,,\n" +
-                  "SECURITY,sec-1,,, , ,INR,,, , ,RELIANCE,Reliance Industries,Equity,,,,,,,,,,,,,,,,\n" +
-                  "INVESTMENT_TRANSACTION,itx-1,2026-08-02,,Z-001,,INR,BUY,,,,RELIANCE,,,10,2500,10,,,,,,,,,,,,\n" +
+                  "BANK_ACCOUNT,bank-1,,HDFC,HDFC-001,Savings,INR,,,,,,,,,,,,,,,,,,,,,\n" +
+                  "BANK_TRANSACTION,txn-1,2026-08-01,,HDFC-001,,INR,Salary,Credit,100000,,,,,,,,,,,,,,,,,,\n" +
+                  "INVESTMENT_ACCOUNT,inv-1,,Zerodha,Z-001,Brokerage,INR,,,,,,,,,,,,,,,,,,,,,\n" +
+                  "SECURITY,sec-1,,,,,INR,,, , ,RELIANCE,Reliance Industries,Equity,,,,,,,,,,,,,,\n" +
+                  "INVESTMENT_TRANSACTION,itx-1,2026-08-02,,Z-001,,INR,BUY,,,,RELIANCE,,,10,2500,10,,,,,,,,,,,\n" +
                   "ASSET,asset-1,2024-01-01,,, ,INR,,,,,,,,,,,Home,Property,5000000,,,,,,,,\n" +
                   "ASSET_VALUATION,av-1,2026-08-31,,, ,INR,,,,,,,,,,,Home,Property,,,,,,,,,,5500000\n" +
-                  "LIABILITY,liab-1,2024-01-01,,, ,INR,,,,,,,,,,,,,Home Loan,Mortgage,2000000,8.5,2029-01-01,,,,\n";
+                  "LIABILITY,liab-1,2024-01-01,,, ,INR,,,,,,,,,,,,,,Home Loan,Mortgage,2000000,8.5,2029-01-01,,,\n";
 
         await using var context = CreateContext(database, tenantId);
         var service = new WealthWorkbookImportService(context, new TenantContext(tenantId));
