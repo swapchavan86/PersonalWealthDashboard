@@ -23,7 +23,7 @@ public sealed class WealthWorkbookImportTests
                   "SECURITY,sec-1,,,,,INR,,, , ,RELIANCE,Reliance Industries,Equity,,,,,,,,,,,,,,\n" +
                   "INVESTMENT_TRANSACTION,itx-1,2026-08-02,,Z-001,,INR,BUY,,,,RELIANCE,,,10,2500,10,,,,,,,,,,,\n" +
                   "ASSET,asset-1,2024-01-01,,, ,INR,,,,,,,,,,,Home,Property,5000000,,,,,,,,\n" +
-                  "ASSET_VALUATION,av-1,2026-08-31,,, ,INR,,,,,,,,,,,Home,Property,,,,,,,,,,5500000\n" +
+                  "ASSET_VALUATION,av-1,2026-08-31,,, ,INR,,,,,,,,,,,Home,Property,,,,,,,,,5500000\n" +
                   "LIABILITY,liab-1,2024-01-01,,, ,INR,,,,,,,,,,,,,,Home Loan,Mortgage,2000000,8.5,2029-01-01,,,\n";
 
         await using var context = CreateContext(database, tenantId);
