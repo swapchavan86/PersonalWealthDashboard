@@ -6,6 +6,7 @@ using PersonalWealth.Application.Documents;
 using PersonalWealth.Application.Documents.Business;
 using PersonalWealth.Application.Documents.Staging;
 using PersonalWealth.Application.Expenses;
+using PersonalWealth.Application.Imports;
 using PersonalWealth.Application.Investments;
 using PersonalWealth.Application.Liabilities;
 using PersonalWealth.Infrastructure.Banking;
@@ -54,6 +55,7 @@ public static class DocumentServiceCollectionExtensions
         services.AddScoped<IAssetValuationService, AssetValuationService>();
         services.AddScoped<IAssetImportService, AssetImportService>();
         services.AddScoped<ILoanScheduleService, LoanScheduleService>();
+        services.AddScoped<IWealthWorkbookImportService, WealthWorkbookImportService>();
 
         return services;
     }
