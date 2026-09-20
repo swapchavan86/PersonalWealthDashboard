@@ -62,8 +62,7 @@ public sealed class WealthWorkbookImportTests
         await using var context = CreateContext(database, tenantId);
         var inner = new WealthWorkbookImportService(context, new TenantContext(tenantId));
         var service = new IdempotentWealthWorkbookImportService(inner, context, new TenantContext(tenantId));
-        await using var content = new MemoryStream(Encoding.UTF8.GetBytes("RecordType,ExternalId,Description
-BANK_ACCOUNT,account-1,\"unterminated"));
+        await using var content = new MemoryStream(Encoding.UTF8.GetBytes("RecordType,ExternalId,Description\\nBANK_ACCOUNT,account-1,\\\"unterminated"));
 
         var result = await service.ImportAsync(content, "broken.csv");
 
