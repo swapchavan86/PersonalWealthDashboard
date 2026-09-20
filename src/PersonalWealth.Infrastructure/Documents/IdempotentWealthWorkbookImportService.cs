@@ -21,7 +21,7 @@ public sealed class IdempotentWealthWorkbookImportService(
         await content.CopyToAsync(buffer, cancellationToken);
         var bytes = buffer.ToArray();
         var hash = Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
-        if (await db.ImportIdentities.AnyAsync(x => x.ContentHash == hash, cancellationToken))
+        if (await db.ImportIdentities.AnyAsync(x => x.TenantId == tenantContext.TenantId && x.ContentHash == hash, cancellationToken))
             return new(Guid.Empty, 0, 0, [], true);
 
         Stream importContent = buffer;
@@ -53,13 +53,24 @@ public sealed class IdempotentWealthWorkbookImportService(
         }
 
         importContent.Position = 0;
-        var result = await inner.ImportAsync(importContent, importFileName, cancellationToken);
-        if (result.Success)
+        try
         {
-            db.ImportIdentities.Add(new ImportIdentity(Guid.NewGuid(), tenantContext.TenantId, result.ImportId, hash));
-            await db.SaveChangesAsync(cancellationToken);
+            var result = await inner.ImportAsync(importContent, importFileName, cancellationToken);
+            if (result.Success)
+            {
+                db.ImportIdentities.Add(new ImportIdentity(Guid.NewGuid(), tenantContext.TenantId, result.ImportId, hash));
+                await db.SaveChangesAsync(cancellationToken);
+            }
+            return result;
         }
-        return result;
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            return new(Guid.Empty, 0, 0, [$"Import could not be completed: {ex.Message}"], false);
+        }
     }
 
     private static string Csv(string value) => $"\"{value.Replace("\"", "\"\"")}\"";
