@@ -25,7 +25,19 @@ public sealed class WealthWorkbookImportService(PersonalWealthDbContext db, ITen
 
         var importId = Guid.NewGuid();
         var errors = new List<string>();
-        var rows = await ReadRowsAsync(content, cancellationToken);
+        List<Dictionary<string, string>> rows;
+        try
+        {
+            rows = await ReadRowsAsync(content, cancellationToken);
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            return new(importId, 0, 0, [$"The CSV could not be read: {ex.Message}"], false);
+        }
         if (rows.Count == 0) return new(importId, 0, 0, ["The Data sheet contains no data rows."], false);
         if (!Headers.SequenceEqual(rows[0].Keys, StringComparer.OrdinalIgnoreCase))
             return new(importId, rows.Count, 0, ["Template headers do not match the supported Personal Wealth template."], false);

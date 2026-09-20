@@ -51,6 +51,27 @@ public sealed class WealthWorkbookImportTests
         Assert.Equal(25010m, await context.InvestmentHoldings.Select(x => x.CostBasis).SingleAsync());
     }
 
+
+    [Fact]
+    public async Task Malformed_csv_returns_validation_error_instead_of_throwing()
+    {
+        await using var database = SqlServerTestDatabase.Create();
+        await database.ResetAsync();
+        var tenantId = Guid.NewGuid();
+
+        await using var context = CreateContext(database, tenantId);
+        var inner = new WealthWorkbookImportService(context, new TenantContext(tenantId));
+        var service = new IdempotentWealthWorkbookImportService(inner, context, new TenantContext(tenantId));
+        await using var content = new MemoryStream(Encoding.UTF8.GetBytes("RecordType,ExternalId,Description\\nBANK_ACCOUNT,account-1,\\\"unterminated"));
+
+        var result = await service.ImportAsync(content, "broken.csv");
+
+        Assert.False(result.Success);
+        Assert.NotEmpty(result.Errors);
+        Assert.Contains("could not be read", result.Errors[0], StringComparison.OrdinalIgnoreCase);
+        Assert.Equal(0, await context.BankAccounts.CountAsync());
+    }
+
     private static PersonalWealthDbContext CreateContext(SqlServerTestDatabase database, Guid tenantId)
     {
         var options = new DbContextOptionsBuilder<PersonalWealthDbContext>().UseSqlServer(database.ConnectionString).Options;
