@@ -26,36 +26,47 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Versioned API for the Personal Wealth Platform."
     });
 
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    if (builder.Environment.IsDevelopment())
     {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Production: enter a JWT as Bearer <token>."
-    });
+        options.AddSecurityDefinition("DevelopmentTenant", new OpenApiSecurityScheme
+        {
+            Name = "X-Tenant-Id",
+            Type = SecuritySchemeType.ApiKey,
+            In = ParameterLocation.Header,
+            Description = "Development only. Supply the tenant GUID used by the local database."
+        });
 
-    options.AddSecurityDefinition("DevelopmentTenant", new OpenApiSecurityScheme
-    {
-        Name = "X-Tenant-Id",
-        Type = SecuritySchemeType.ApiKey,
-        In = ParameterLocation.Header,
-        Description = "Development only. Supply the tenant GUID used by the local database."
-    });
+        options.AddSecurityDefinition("DevelopmentUser", new OpenApiSecurityScheme
+        {
+            Name = "X-Dev-User",
+            Type = SecuritySchemeType.ApiKey,
+            In = ParameterLocation.Header,
+            Description = "Development only. Supply any non-empty local user identifier."
+        });
 
-    options.AddSecurityDefinition("DevelopmentUser", new OpenApiSecurityScheme
+        options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+        {
+            [new OpenApiSecuritySchemeReference("DevelopmentTenant", document)] = [],
+            [new OpenApiSecuritySchemeReference("DevelopmentUser", document)] = []
+        });
+    }
+    else
     {
-        Name = "X-Dev-User",
-        Type = SecuritySchemeType.ApiKey,
-        In = ParameterLocation.Header,
-        Description = "Development only. Supply any non-empty local user identifier."
-    });
+        options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Production: enter a JWT as Bearer <token>."
+        });
 
-    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
-    {
-        [new OpenApiSecuritySchemeReference("Bearer", document)] = []
-    });
+        options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+        {
+            [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+        });
+    }
 });
 
 if (builder.Environment.IsDevelopment())
